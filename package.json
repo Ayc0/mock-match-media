@@ -1,0 +1,18 @@
+{
+    "name": "mock-match-media",
+    "version": "0.0.0",
+    "description": "mock window.matchMedia for tests or node",
+    "source": "src/index.ts",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "unpkg": "dist/index.umd.js",
+    "repository": "git@github.com:Ayc0/mock-match-media.git",
+    "author": "Ayc0 <ayc0.benj@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "build": "microbundle --name $npm_package_name"
+    },
+    "devDependencies": {
+        "microbundle": "^0.11.0"
+    }
+}
