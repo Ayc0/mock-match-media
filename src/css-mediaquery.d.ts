@@ -1,7 +1,8 @@
 declare module "css-mediaquery" {
     export type Feature = string;
 
-    type Match = (query: string, state: Record<Feature, string>) => boolean;
+    export type MediaState = Record<Feature, string>;
+    type Match = (query: string, state: MediaState) => boolean;
     export const match: Match;
 
     type Expression = {
