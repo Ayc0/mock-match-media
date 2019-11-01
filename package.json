@@ -6,17 +6,28 @@
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "unpkg": "dist/index.umd.js",
+    "types": "dist/index.d.js",
     "repository": "git@github.com:Ayc0/mock-match-media.git",
     "author": "Ayc0 <ayc0.benj@gmail.com>",
     "license": "MIT",
+    "bugs": "https://github.com/Ayc0/mock-match-media/issues",
+    "homepage": "https://github.com/Ayc0/mock-match-media#readme",
+    "keywords": [
+        "match-media",
+        "mock",
+        "test",
+        "jest",
+        "ssr",
+        "server-side-rendering"
+    ],
     "scripts": {
         "build": "microbundle --name $npm_package_name",
         "prepublishOnly": "rm -rf dist && yarn -s build"
     },
-    "devDependencies": {
-        "microbundle": "^0.11.0"
-    },
     "dependencies": {
         "css-mediaquery": "^0.1.2"
+    },
+    "devDependencies": {
+        "microbundle": "^0.11.0"
     }
 }

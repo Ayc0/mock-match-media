@@ -72,3 +72,29 @@ require("mock-match-media/polyfill");
 
 And then `matchMedia` and `window.matchMedia` are going to be aliased to this `match-media`.
 You'll only have to set the media type with `setMedia` inside of your tests.
+
+# How to use with other libraries
+
+## Jest
+
+In `jest.setup.js`, you only need to import `mock-match-media/polyfill` and then you can use `setMedia` in your tests.
+
+You can find an example [here](https://github.com/Ayc0/mock-match-media-examples/tree/master/create-react-app) that includes Jest, react testing library and react-scripts.
+
+## NextJS
+
+You cannot use `mock-match-media/polyfill` because Next uses a custom `document` global variable.
+
+In `server.js`, you can do:
+
+```js
+const { matchMedia, setMedia } = require("mock-match-media");
+
+global.matchMedia = matchMedia;
+
+setMedia({
+    // your config
+});
+```
+
+You can find an example [here](https://github.com/Ayc0/mock-match-media-examples/tree/master/next) that includes a custom `server.js` and a basic component.
