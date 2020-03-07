@@ -44,7 +44,12 @@ const removeListener = (query: string, callback: Listener) => {
 };
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
-    const matches = match(query, state);
+    let matches;
+    try {
+        matches = match(query, state);
+    } catch (e) {
+        matches = false;
+    }
     return {
         matches,
         media: query,
