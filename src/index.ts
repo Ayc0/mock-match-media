@@ -1,8 +1,16 @@
-import { match, parse, Feature, MediaState } from "css-mediaquery";
+import { match as insecureMatch, parse, Feature, MediaState } from "css-mediaquery";
 
 const state: Partial<MediaState> = {};
 const MEDIA = Symbol("MEDIA");
 const PREVIOUS_MATCH = Symbol("PREVIOUS_MATCH");
+
+const match: typeof insecureMatch = (...args) => {
+    try {
+        return match(...args);
+    } catch (e) {
+        return false;
+    }
+};
 
 const getFeaturesFromQuery = (query: string) => {
     const parsedQuery = parse(query);
@@ -44,12 +52,7 @@ const removeListener = (query: string, callback: Listener) => {
 };
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
-    let matches;
-    try {
-        matches = match(query, state);
-    } catch (e) {
-        matches = false;
-    }
+    const matches = match(query, state);
     return {
         matches,
         media: query,
