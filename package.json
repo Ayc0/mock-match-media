@@ -21,13 +21,13 @@
         "server-side-rendering"
     ],
     "scripts": {
-        "build": "microbundle --name $npm_package_name",
+        "build": "microbundle --name $npm_package_name -f esm,cjs,umd",
         "prepublishOnly": "rm -rf dist && yarn -s build"
     },
     "dependencies": {
         "css-mediaquery": "^0.1.2"
     },
     "devDependencies": {
-        "microbundle": "^0.11.0"
+        "microbundle": "^0.14.2"
     }
 }
