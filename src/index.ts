@@ -93,16 +93,17 @@ const defaultEvent = {
     eventPhase: 0,
     isTrusted: false,
     initEvent: () => {},
-    AT_TARGET: null,
-    BUBBLING_PHASE: null,
-    CAPTURING_PHASE: null,
-    NONE: null,
     composedPath: () => [],
     preventDefault: () => {},
     stopImmediatePropagation: () => {},
     stopPropagation: () => {},
     returnValue: true,
     srcElement: null,
+    // See https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
+    NONE: 0,
+    CAPTURING_PHASE: 1,
+    AT_TARGET: 2,
+    BUBBLING_PHASE: 3,
 };
 
 export const setMedia = (media: Partial<MediaState>) => {
