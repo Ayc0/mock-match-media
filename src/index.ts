@@ -48,8 +48,8 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
     try {
         matches = match(query, state);
     } catch (e) {
-        query = query.replace(/ /g, "_");
-        matches = match(query, state);
+        query = "not all";
+        matches = false;
     }
     return {
         matches,
