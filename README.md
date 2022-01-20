@@ -1,5 +1,13 @@
 Simple server-side compatible substitution for `window.matchMedia()` based on [css-mediaquery](https://github.com/ericf/css-mediaquery).
 
+1. [Usage](#usage)
+   1. [Listeners](#listeners)
+   2. [Cleanup](#cleanup)
+   3. [Polyfill](#polyfill)
+2. [How to use with other libraries](#how-to-use-with-other-libraries)
+   1. [Jest](#jest)
+   2. [NextJS](#nextjs)
+
 # Usage
 
 ```js
@@ -36,7 +44,7 @@ setMedia({
     width: "50px",
 });
 
-const listener = event => console.log(event.matches);
+const listener = (event) => console.log(event.matches);
 
 const matcher = matchMedia("(min-width: 250px)");
 
@@ -62,6 +70,14 @@ setMedia({
 // outputs nothing because the listener is removed
 ```
 
+## Cleanup
+
+`mock-match-media` provides 3 cleanup functions:
+
+-   `cleanupListeners` to clear all listeners called via `matchMedia().addListener()` or `matchMedia().addEventListener()` (to avoid calling in side effects),
+-   `cleanupMedia` to reset the state of the window set via `setMedia()`,
+-   `cleanup` that calls the 2 other functions to clean everything.
+
 ## Polyfill
 
 If you don't want to change your code or to setup mocks with your testing library, you can do:
@@ -77,20 +93,24 @@ You'll only have to set the media type with `setMedia` inside of your tests.
 
 ## Jest
 
-In `jest.setup.js`, you only need to import `mock-match-media/polyfill` and then you can use `setMedia` in your tests.
+In `jest.setup.js`, you only need to import `mock-match-media/jest-setup`. It'll:
+
+-   install the `matchMedia` polyfill
+-   add a call to `cleanup` in `afterAll` to auto-cleanup your env in after each `test`/`it`.
+
+You can set import `jest-setup` in `setupFiles` or in `setupFilesAfterEnv` in your jest config.
+
+And then you can use `setMedia` in your tests.
 
 You can find an example [here](https://github.com/Ayc0/mock-match-media-examples/tree/master/create-react-app) that includes Jest, react testing library and react-scripts.
 
 ## NextJS
 
-You cannot use `mock-match-media/polyfill` because Next uses a custom `document` global variable.
-
 In `server.js`, you can do:
 
 ```js
-const { matchMedia, setMedia } = require("mock-match-media");
-
-global.matchMedia = matchMedia;
+require("mock-match-media/polyfill");
+const { setMedia } = require("mock-match-media");
 
 setMedia({
     // your config
