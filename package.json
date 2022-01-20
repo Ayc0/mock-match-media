@@ -42,6 +42,8 @@
         "css-mediaquery": "^0.1.2"
     },
     "devDependencies": {
-        "microbundle": "^0.14.2"
+        "ava": "^4.0.1",
+        "microbundle": "^0.14.2",
+        "mock-match-media": "link:."
     }
 }
