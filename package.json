@@ -18,6 +18,9 @@
         "./polyfill": {
             "require": "./polyfill.js",
             "import": "./polyfill.mjs"
+        },
+        "./jest-setup": {
+            "require": "./jest-setup.cjs"
         }
     },
     "repository": "git@github.com:Ayc0/mock-match-media.git",
