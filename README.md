@@ -93,7 +93,7 @@ You'll only have to set the media type with `setMedia` inside of your tests.
 
 ## Jest
 
-In `jest.setup.js`, you only need to import `mock-match-media/jest-setup`. It'll:
+In `jest.setup.js`, you only need to import `mock-match-media/jest-setup` (or `mock-match-media/jest-setup.cjs` depending on your config). It'll:
 
 -   install the `matchMedia` polyfill
 -   add a call to `cleanup` in `afterAll` to auto-cleanup your env in after each `test`/`it`.
