@@ -1,5 +1,5 @@
 const test = require("ava");
-const { matchMedia, setMedia, cleanupListeners, cleanupState, cleanup } = require("mock-match-media");
+const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 
 test(".matches", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
@@ -21,7 +21,7 @@ test(".matches", (t) => {
     t.pass();
 });
 
-test("cleanupState", (t) => {
+test("cleanupMedia", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
     setMedia({
@@ -29,7 +29,7 @@ test("cleanupState", (t) => {
     });
     t.is(doesMatch(), true);
 
-    cleanupState();
+    cleanupMedia();
     t.is(doesMatch(), false);
 });
 
