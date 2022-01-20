@@ -7,6 +7,19 @@
     "module": "dist/index.mjs",
     "unpkg": "dist/index.umd.js",
     "types": "dist/index.d.js",
+    "exports": {
+        ".": {
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs",
+            "browser": "./dist/index.mjs",
+            "umd": "./dist/index.umd.js"
+        },
+        "./package.json": "./package.json",
+        "./polyfill": {
+            "require": "./polyfill.js",
+            "import": "./polyfill.mjs"
+        }
+    },
     "repository": "git@github.com:Ayc0/mock-match-media.git",
     "author": "Ayc0 <ayc0.benj@gmail.com>",
     "license": "MIT",
@@ -21,8 +34,9 @@
         "server-side-rendering"
     ],
     "scripts": {
-        "build": "microbundle --name $npm_package_name -f esm,cjs,umd",
-        "prepublishOnly": "rm -rf dist && yarn -s build"
+        "build": "rm -rf dist && microbundle --name $npm_package_name -f esm,cjs,umd",
+        "test": "ava",
+        "prepublishOnly": "yarn build"
     },
     "dependencies": {
         "css-mediaquery": "^0.1.2"
