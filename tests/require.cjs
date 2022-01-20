@@ -9,7 +9,7 @@ test("can import mock-match-media from CJS", (t) => {
 test("can import mock-match-media/polyfill from CJS", (t) => {
     t.is(global.matchMedia, undefined);
     const { matchMedia } = require("mock-match-media");
-    console.log(require("mock-match-media/polyfill"));
+    require("mock-match-media/polyfill");
     t.is(global.matchMedia, matchMedia);
     t.pass();
 });
