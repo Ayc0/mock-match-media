@@ -2,7 +2,7 @@ const test = require("ava");
 
 test("can import mock-match-media from CJS", (t) => {
     const exportsDefault = require("mock-match-media");
-    t.deepEqual(Object.keys(exportsDefault), ["cleanup", "cleanupListeners", "cleanupState", "matchMedia", "setMedia"]);
+    t.deepEqual(Object.keys(exportsDefault), ["cleanup", "cleanupListeners", "cleanupMedia", "matchMedia", "setMedia"]);
     t.pass();
 });
 

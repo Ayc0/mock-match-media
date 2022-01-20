@@ -2,7 +2,7 @@ import test from "ava";
 
 test("can import mock-match-media from ESM", async (t) => {
     const exportsDefault = await import("mock-match-media");
-    t.deepEqual(Object.keys(exportsDefault), ["cleanup", "cleanupListeners", "cleanupState", "matchMedia", "setMedia"]);
+    t.deepEqual(Object.keys(exportsDefault), ["cleanup", "cleanupListeners", "cleanupMedia", "matchMedia", "setMedia"]);
     t.pass();
 });
 

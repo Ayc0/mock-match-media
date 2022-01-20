@@ -152,11 +152,11 @@ export const cleanupListeners = () => {
     ListenerQueriesMatchesMap = new WeakMap();
 };
 
-export const cleanupState = () => {
+export const cleanupMedia = () => {
     state = {};
 };
 
 export const cleanup = () => {
     cleanupListeners();
-    cleanupState();
+    cleanupMedia();
 };

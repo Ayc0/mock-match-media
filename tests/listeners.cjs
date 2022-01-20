@@ -1,5 +1,5 @@
 const test = require("ava");
-const { matchMedia, setMedia, cleanupListeners, cleanupState, cleanup } = require("mock-match-media");
+const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 
 const waitFor = async (cb) => {
     await cb().catch(() => {
