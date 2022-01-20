@@ -1,14 +1,12 @@
-import { match, parse, Feature, MediaState } from "css-mediaquery";
+import { match, parse, Feature, Query, MediaState } from "css-mediaquery";
 
-const state: Partial<MediaState> = {};
-const MEDIA = Symbol("MEDIA");
-const PREVIOUS_MATCH = Symbol("PREVIOUS_MATCH");
+const state: MediaState = {};
 
-const getFeaturesFromQuery = (query: string) => {
+const getFeaturesFromQuery = (query: Query) => {
     const parsedQuery = parse(query);
     const features = new Set<Feature>();
-    parsedQuery.forEach(subQuery => {
-        subQuery.expressions.forEach(expression => {
+    parsedQuery.forEach((subQuery) => {
+        subQuery.expressions.forEach((expression) => {
             features.add(expression.feature);
         });
     });
@@ -17,21 +15,31 @@ const getFeaturesFromQuery = (query: string) => {
 
 type Listener = (event: MediaQueryListEvent) => void;
 const listeners = new Map<Feature, Set<Listener>>();
+let ListenerQueriesMatchesMap = new WeakMap<Listener, Map<Query, boolean>>();
+function getQueryMatchMap(listener: Listener): Map<Query, boolean> {
+    let queryMatchMap = ListenerQueriesMatchesMap.get(listener);
+    if (!queryMatchMap) {
+        queryMatchMap = new Map();
+        ListenerQueriesMatchesMap.set(listener, queryMatchMap);
+    }
+    return queryMatchMap;
+}
 
-const addListener = (query: string, callback: Listener) => {
-    callback[MEDIA] = query;
+const addListener = (query: Query, callback: Listener) => {
     const features = getFeaturesFromQuery(query);
-    features.forEach(feature => {
-        if (!listeners.has(feature)) {
-            listeners.set(feature, new Set<Listener>());
+    features.forEach((feature) => {
+        let listener = listeners.get(feature);
+        if (!listener) {
+            listener = new Set<Listener>();
+            listeners.set(feature, listener);
         }
-        listeners.get(feature).add(callback);
+        listener.add(callback);
     });
 };
 
-const removeListener = (query: string, callback: Listener) => {
+const removeListener = (query: Query, callback: Listener) => {
     const features = getFeaturesFromQuery(query);
-    features.forEach(feature => {
+    features.forEach((feature) => {
         if (!listeners.has(feature)) {
             return;
         }
@@ -44,11 +52,12 @@ const removeListener = (query: string, callback: Listener) => {
 };
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
+    let queryTyped = query as Query;
     let matches;
     try {
-        matches = match(query, state);
+        matches = match(queryTyped, state);
     } catch (e) {
-        query = "not all";
+        queryTyped = "not all" as Query;
         matches = false;
     }
     return {
@@ -61,23 +70,25 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
             if (event !== "change") {
                 return;
             }
-            callback[PREVIOUS_MATCH] = matches;
-            addListener(query, callback);
+            const queryMatchMap = getQueryMatchMap(callback);
+            queryMatchMap.set(queryTyped, matches);
+            addListener(queryTyped, callback);
         },
         removeEventListener: (event, callback) => {
             if (event !== "change") {
                 return;
             }
-            removeListener(query, callback);
+            removeListener(queryTyped, callback);
         },
         dispatchEvent: () => {
             throw new Error("not supported");
         },
-        addListener: callback => {
-            callback[PREVIOUS_MATCH] = matches;
-            addListener(query, callback);
+        addListener: (callback) => {
+            const queryMatchMap = getQueryMatchMap(callback!);
+            queryMatchMap.set(queryTyped, matches);
+            addListener(queryTyped, callback!);
         },
-        removeListener: callback => removeListener(query, callback),
+        removeListener: (callback) => removeListener(queryTyped, callback!),
     };
 };
 
@@ -106,30 +117,31 @@ const defaultEvent = {
     BUBBLING_PHASE: 3,
 };
 
-export const setMedia = (media: Partial<MediaState>) => {
+export const setMedia = (media: MediaState) => {
     const changedFeatures = new Set<Feature>();
-    Object.keys(media).forEach(feature => {
-        changedFeatures.add(feature);
+    Object.keys(media).forEach((feature) => {
+        changedFeatures.add(feature as Feature);
         state[feature] = media[feature];
     });
-    changedFeatures.forEach(changedFeature => {
+    changedFeatures.forEach((changedFeature) => {
         const activeListeners = listeners.get(changedFeature);
         if (!activeListeners) {
             return;
         }
-        activeListeners.forEach(listener => {
-            const query = listener[MEDIA];
-            const matches = match(query, state);
-            const previousMatches = listener[PREVIOUS_MATCH];
-            if (previousMatches !== matches) {
-                listener({
-                    ...defaultEvent,
-                    timeStamp: Date.now(),
-                    matches,
-                    media: query,
-                });
+        activeListeners.forEach((listener) => {
+            const queryMatchMap = getQueryMatchMap(listener);
+            for (const [query, previousMatches] of queryMatchMap.entries()) {
+                const matches = match(query, state);
+                if (previousMatches !== matches) {
+                    listener({
+                        ...defaultEvent,
+                        timeStamp: Date.now(),
+                        matches,
+                        media: query,
+                    });
+                }
+                queryMatchMap.set(query, matches);
             }
-            listener[PREVIOUS_MATCH] = matches;
         });
     });
 };
