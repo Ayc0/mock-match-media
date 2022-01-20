@@ -1,6 +1,6 @@
 import { match, parse, Feature, Query, MediaState } from "css-mediaquery";
 
-const state: MediaState = {};
+let state: MediaState = {};
 
 const getFeaturesFromQuery = (query: Query) => {
     const parsedQuery = parse(query);
@@ -144,4 +144,19 @@ export const setMedia = (media: MediaState) => {
             }
         });
     });
+};
+
+export const cleanupListeners = () => {
+    listeners.clear();
+    // .clear() doesn't exist on weak maps
+    ListenerQueriesMatchesMap = new WeakMap();
+};
+
+export const cleanupState = () => {
+    state = {};
+};
+
+export const cleanup = () => {
+    cleanupListeners();
+    cleanupState();
 };
