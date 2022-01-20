@@ -1,8 +1,19 @@
 declare module "css-mediaquery" {
-    export type Feature = string;
+    /**
+     * A query is a string like `(min-width: 50px), (max-height: 250px)`
+     */
+    export type Query = string & { __type: "media" };
+    /**
+     * Meaningful unit that composes queries.
+     *
+     * For instance, on query like `(min-width: 50px), (max-height: 250px)`, there are 2 features:
+     * - `width`
+     * - `height`
+     */
+    export type Feature = string & { __type: "feature" };
 
     export type MediaState = Record<Feature, string>;
-    type Match = (query: string, state: MediaState) => boolean;
+    type Match = (query: Query, state: MediaState) => boolean;
     export const match: Match;
 
     type Expression = {
@@ -15,6 +26,6 @@ declare module "css-mediaquery" {
         type: "all" | "print" | "screen" | "speech";
         expressions: Expression[];
     };
-    type Parse = (query: string) => MatchedMedia[];
+    type Parse = (query: Query) => MatchedMedia[];
     export const parse: Parse;
 }
