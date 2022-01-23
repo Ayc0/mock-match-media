@@ -5,14 +5,12 @@
     "source": "src/index.ts",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
-    "unpkg": "dist/index.umd.js",
     "types": "dist/index.d.js",
     "exports": {
         ".": {
             "require": "./dist/index.js",
             "import": "./dist/index.mjs",
-            "browser": "./dist/index.mjs",
-            "umd": "./dist/index.umd.js"
+            "browser": "./dist/index.mjs"
         },
         "./package.json": "./package.json",
         "./polyfill": {
@@ -37,7 +35,7 @@
         "server-side-rendering"
     ],
     "scripts": {
-        "build": "rm -rf dist && microbundle --name $npm_package_name -f esm,cjs,umd",
+        "build": "rm -rf dist && microbundle --target node -f esm,cjs",
         "test": "ava",
         "prepublishOnly": "yarn build"
     },
