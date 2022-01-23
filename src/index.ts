@@ -42,7 +42,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
             return match(queryTyped, state);
         },
         media: query,
-        onchange: () => {},
+        onchange: null,
         addEventListener: (event, callback) => {
             if (event === "change" && callback) listeners.add(callback);
         },
@@ -50,6 +50,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
             if (event === "change") listeners.delete(callback);
         },
         dispatchEvent: (event: MediaQueryListEvent) => {
+            mql.onchange?.(event);
             listeners.forEach((listener) => {
                 if (event.type === "change" || looseCallbacks.has(listener)) listener(event);
             });

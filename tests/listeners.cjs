@@ -255,5 +255,36 @@ test.serial("the 2 kinds of listeners can reset each other", (t) => {
     t.pass();
 });
 
-test.todo("check mql.onchange");
+test.serial("the listeners and onchange are fired twice when set together", (t) => {
+    const mql1 = matchMedia("(min-width: 500px)");
+    const [cb1, calls1] = mock();
+    mql1.addEventListener("change", cb1);
+    mql1.onchange = cb1;
+    mql1.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls1.length, 2);
+
+    const mql2 = matchMedia("(min-width: 500px)");
+    const [cb2, calls2] = mock();
+    mql2.addListener(cb2);
+    mql2.onchange = cb2;
+    mql2.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls2.length, 2);
+});
+
+test.serial("the listeners can't disable onchange", (t) => {
+    const mql1 = matchMedia("(min-width: 500px)");
+    const [cb1, calls1] = mock();
+    mql1.onchange = cb1;
+    mql1.removeEventListener("change", cb1);
+    mql1.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls1.length, 1);
+
+    const mql2 = matchMedia("(min-width: 500px)");
+    const [cb2, calls2] = mock();
+    mql2.onchange = cb2;
+    mql2.removeListener(cb2);
+    mql2.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls2.length, 1);
+});
+
 test.todo("check {once: true} in addEventListener");
