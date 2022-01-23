@@ -125,9 +125,12 @@ class EventLegacy {
     }
 }
 
-export class MediaQueryListEvent extends EventLegacy {
-    media: string;
-    matches: boolean;
+// @ts-expect-error
+const EventCompat: typeof Event = typeof Event === "undefined" ? EventLegacy : Event;
+
+export class MediaQueryListEvent extends EventCompat {
+    readonly media: string;
+    readonly matches: boolean;
     constructor(
         type: "change",
         options: {
