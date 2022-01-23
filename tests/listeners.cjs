@@ -137,6 +137,39 @@ test.serial("listeners get only called once when multiple features change", (t) 
     t.pass();
 });
 
+test.serial("ensure that when the same fn is used twice, it won't be called twice on each change", (t) => {
+    const mql = matchMedia("(min-width: 500px)");
+
+    const [cb, calls] = mock();
+
+    mql.addEventListener("change", cb);
+    mql.addEventListener("change", cb);
+
+    setMedia({
+        width: "600px",
+    });
+    t.is(calls.length, 1);
+
+    t.pass();
+});
+
+test.serial.skip("ensure that when the same fn is used in 2 different MQL, it will be called twice", (t) => {
+    const mql1 = matchMedia("(min-width: 500px)");
+    const mql2 = matchMedia("(min-width: 500px)");
+
+    const [cb, calls] = mock();
+
+    mql1.addEventListener("change", cb);
+    mql2.addEventListener("change", cb);
+
+    setMedia({
+        width: "600px",
+    });
+    t.is(calls.length, 2);
+
+    t.pass();
+});
+
 test.todo("check mql.onchange");
 test.todo("check mql.dispatchEvent");
 test.todo("check {once: true} in addEventListener");
