@@ -114,7 +114,8 @@ const defaultEvent = {
     BUBBLING_PHASE: 3,
 };
 
-export const setMedia = (media: MediaState) => {
+// Cannot use MediaState here as setMedia is exposed in the API
+export const setMedia = (media: Record<string, string>) => {
     const changedFeatures = new Set<Feature>();
     Object.keys(media).forEach((feature) => {
         changedFeatures.add(feature as Feature);
