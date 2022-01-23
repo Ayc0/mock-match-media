@@ -91,7 +91,41 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
     };
 };
 
-export class MediaQueryListEvent extends Event {
+const now = Date.now();
+
+// Event was added in node 15, so until we drop the support for versions before it, we need to use this
+class EventLegacy {
+    type: "change";
+    timeStamp: number;
+
+    bubbles = false;
+    cancelBubble = false;
+    cancelable = false;
+    composed = false;
+    target = null;
+    currentTarget = null;
+    defaultPrevented = false;
+    eventPhase = 0;
+    isTrusted = false;
+    initEvent = () => {};
+    composedPath = () => [];
+    preventDefault = () => {};
+    stopImmediatePropagation = () => {};
+    stopPropagation = () => {};
+    returnValue = true;
+    srcElement = null;
+    // See https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
+    NONE = 0;
+    CAPTURING_PHASE = 1;
+    AT_TARGET = 2;
+    BUBBLING_PHASE = 3;
+    constructor(type: "change") {
+        this.type = type;
+        this.timeStamp = Date.now() - now; // See https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#value
+    }
+}
+
+export class MediaQueryListEvent extends EventLegacy {
     media: string;
     matches: boolean;
     constructor(
