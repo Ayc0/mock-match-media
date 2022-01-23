@@ -2,26 +2,24 @@ const test = require("ava");
 const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 
 test(".matches", (t) => {
-    const doesMatch = () => matchMedia("(min-width: 500px)").matches;
+    const mql = matchMedia("(min-width: 500px)");
 
-    t.is(doesMatch(), false);
+    t.is(mql.matches, false);
 
     setMedia({
         width: "600px",
     });
 
-    t.is(doesMatch(), true);
+    t.is(mql.matches, true);
 
     setMedia({
         width: "300px",
     });
 
-    t.is(doesMatch(), false);
+    t.is(mql.matches, false);
 
     t.pass();
 });
-
-test.todo(".matches is a getter and is linked to the latest match");
 
 test("cleanupMedia", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
