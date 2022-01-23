@@ -105,3 +105,41 @@ test(".addEventListener()", async (t) => {
 
     t.pass();
 });
+
+test("listeners get only called once when multiple features change", async (t) => {
+    const mql = matchMedia("(min-width: 500px) and (min-height: 200px)");
+
+    const calls = [];
+    const cb = (event) => {
+        calls.push(event);
+    };
+
+    t.is(mql.matches, false);
+
+    mql.addEventListener("change", cb);
+    t.is(calls.length, 0);
+
+    setMedia({
+        width: "300px",
+        height: "300px",
+    });
+    t.is(calls.length, 0);
+
+    // here it checks that it won't first apply width, see if it matches, then apply height, see if it matches
+    setMedia({
+        width: "600px",
+        height: "100px",
+    });
+    t.is(calls.length, 0);
+
+    setMedia({
+        width: "600px",
+        height: "300px",
+    });
+    t.is(calls.length, 1);
+    t.is(calls[0].matches, true);
+
+    t.pass();
+});
+
+test.todo("check mql.onchange");

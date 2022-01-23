@@ -21,6 +21,8 @@ test(".matches", (t) => {
     t.pass();
 });
 
+test.todo(".matches is a getter and is linked to the latest match");
+
 test("cleanupMedia", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
