@@ -2,7 +2,7 @@ import { match, parse, Feature, Query, MediaState } from "css-mediaquery";
 
 let state: MediaState = {};
 
-const getFeaturesFromQuery = (query: Query) => {
+const getFeaturesFromQuery = (query: Query): Set<Feature> => {
     const parsedQuery = parse(query);
     const features = new Set<Feature>();
     parsedQuery.forEach((subQuery) => {
@@ -14,81 +14,68 @@ const getFeaturesFromQuery = (query: Query) => {
 };
 
 type Listener = (event: MediaQueryListEvent) => void;
-const listeners = new Map<Feature, Set<Listener>>();
-let ListenerQueriesMatchesMap = new WeakMap<Listener, Map<Query, boolean>>();
-function getQueryMatchMap(listener: Listener): Map<Query, boolean> {
-    let queryMatchMap = ListenerQueriesMatchesMap.get(listener);
-    if (!queryMatchMap) {
-        queryMatchMap = new Map();
-        ListenerQueriesMatchesMap.set(listener, queryMatchMap);
-    }
-    return queryMatchMap;
-}
+type MQL = ReturnType<typeof matchMedia>;
 
-const addListener = (query: Query, callback: Listener) => {
-    const features = getFeaturesFromQuery(query);
-    features.forEach((feature) => {
-        let listener = listeners.get(feature);
-        if (!listener) {
-            listener = new Set<Listener>();
-            listeners.set(feature, listener);
-        }
-        listener.add(callback);
-    });
-};
-
-const removeListener = (query: Query, callback: Listener) => {
-    const features = getFeaturesFromQuery(query);
-    features.forEach((feature) => {
-        const listener = listeners.get(feature);
-        if (!listener) {
-            return;
-        }
-        listener.delete(callback);
-    });
-};
+const MQLs = new Map<MQL, { clear: () => void; previousMatched: boolean; features: Set<Feature> }>();
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
     let queryTyped = query as Query;
-    let initiallyMatched;
+    let previousMatched;
     try {
-        initiallyMatched = match(queryTyped, state);
+        previousMatched = match(queryTyped, state);
     } catch (e) {
         queryTyped = "not all" as Query;
-        initiallyMatched = false;
+        previousMatched = false;
     }
-    return {
+    const listeners = new Set<Listener>();
+    const looseCallbacks = new WeakSet<Listener>();
+
+    const clear = () => {
+        for (const listener of listeners) {
+            looseCallbacks.delete(listener);
+        }
+        listeners.clear();
+    };
+
+    const mql: MQL = {
         get matches() {
             return match(queryTyped, state);
         },
         media: query,
-        onchange: () => {
-            throw new Error("not supported");
-        },
+        onchange: () => {},
         addEventListener: (event, callback) => {
-            if (event !== "change") {
-                return;
-            }
-            const queryMatchMap = getQueryMatchMap(callback);
-            queryMatchMap.set(queryTyped, initiallyMatched);
-            addListener(queryTyped, callback);
+            if (event === "change" && callback) listeners.add(callback);
         },
         removeEventListener: (event, callback) => {
-            if (event !== "change") {
-                return;
-            }
-            removeListener(queryTyped, callback);
+            if (event === "change") listeners.delete(callback);
         },
-        dispatchEvent: () => {
-            throw new Error("not supported");
+        dispatchEvent: (event: MediaQueryListEvent) => {
+            listeners.forEach((listener) => {
+                if (event.type === "change" || looseCallbacks.has(listener)) listener(event);
+            });
+            // TODO: target and currentTarget
+            // Object.defineProperty(event, "target", { value: mql });
+            return true;
         },
         addListener: (callback) => {
-            const queryMatchMap = getQueryMatchMap(callback!);
-            queryMatchMap.set(queryTyped, initiallyMatched);
-            addListener(queryTyped, callback!);
+            if (!callback) return;
+            looseCallbacks.add(callback);
+            listeners.add(callback);
         },
-        removeListener: (callback) => removeListener(queryTyped, callback!),
+        removeListener: (callback) => {
+            if (!callback) return;
+            looseCallbacks.delete(callback);
+            listeners.delete(callback!);
+        },
     };
+
+    MQLs.set(mql, {
+        previousMatched,
+        clear,
+        features: getFeaturesFromQuery(queryTyped),
+    });
+
+    return mql;
 };
 
 const now = Date.now();
@@ -151,32 +138,31 @@ export const setMedia = (media: Record<string, string>) => {
         changedFeatures.add(feature as Feature);
         state[feature] = media[feature];
     });
-    changedFeatures.forEach((changedFeature) => {
-        const activeListeners = listeners.get(changedFeature);
-        if (!activeListeners) {
-            return;
-        }
-        activeListeners.forEach((listener) => {
-            const queryMatchMap = getQueryMatchMap(listener);
-            for (const [query, previousMatches] of queryMatchMap.entries()) {
-                const matches = match(query, state);
-                if (previousMatches !== matches) {
-                    const event = new MediaQueryListEvent("change", {
-                        matches,
-                        media: query,
-                    });
-                    listener(event);
-                }
-                queryMatchMap.set(query, matches);
+    for (const [MQL, cache] of MQLs) {
+        let found = false;
+        for (const feature of cache.features) {
+            if (changedFeatures.has(feature)) {
+                found = true;
+                break;
             }
-        });
-    });
+        }
+        if (!found) {
+            continue;
+        }
+        const matches = match(MQL.media as Query, state);
+        if (matches === cache.previousMatched) {
+            continue;
+        }
+        cache.previousMatched = matches;
+        MQL.dispatchEvent(new MediaQueryListEvent("change", { matches, media: MQL.media }));
+    }
 };
 
 export const cleanupListeners = () => {
-    listeners.clear();
-    // .clear() doesn't exist on weak maps
-    ListenerQueriesMatchesMap = new WeakMap();
+    for (const { clear } of MQLs.values()) {
+        clear();
+    }
+    MQLs.clear();
 };
 
 export const cleanupMedia = () => {
