@@ -86,8 +86,8 @@ If you don't want to change your code or to setup mocks with your testing librar
 require("mock-match-media/polyfill");
 ```
 
-And then `matchMedia` and `window.matchMedia` are going to be aliased to this `match-media`.
-You'll only have to set the media type with `setMedia` inside of your tests.
+And then global variables `matchMedia` and `MediaQueryListEvent` will be set.
+And thus, you won't have to import those (you'll still have to import `setMedia`, and the `cleanup` functions).
 
 # How to use with other libraries
 
@@ -95,7 +95,7 @@ You'll only have to set the media type with `setMedia` inside of your tests.
 
 In `jest.setup.js`, you only need to import `mock-match-media/jest-setup` (or `mock-match-media/jest-setup.cjs` depending on your config). It'll:
 
--   install the `matchMedia` polyfill
+-   install the polyfill (for `matchMedia` and `MediaQueryListEvent`)
 -   add a call to `cleanup` in `afterAll` to auto-cleanup your env in after each `test`/`it`.
 
 You can set import `jest-setup` in `setupFiles` or in `setupFilesAfterEnv` in your jest config.
