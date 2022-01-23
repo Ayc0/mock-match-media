@@ -1,6 +1,6 @@
 const test = require("ava");
 
-test("can import mock-match-media from CJS", (t) => {
+test.serial("can import mock-match-media from CJS", (t) => {
     const exportsDefault = require("mock-match-media");
     t.deepEqual(Object.keys(exportsDefault), [
         "MediaQueryListEvent",
@@ -13,7 +13,7 @@ test("can import mock-match-media from CJS", (t) => {
     t.pass();
 });
 
-test("can import mock-match-media/polyfill from CJS", (t) => {
+test.serial("can import mock-match-media/polyfill from CJS", (t) => {
     t.is(global.matchMedia, undefined);
     t.is(global.MediaQueryListEvent, undefined);
     const { matchMedia, MediaQueryListEvent } = require("mock-match-media");
@@ -25,7 +25,7 @@ test("can import mock-match-media/polyfill from CJS", (t) => {
     t.pass();
 });
 
-test("can import mock-match-media/jest-setup from CJS", (t) => {
+test.serial("can import mock-match-media/jest-setup from CJS", (t) => {
     t.is(global.matchMedia, undefined);
     const { matchMedia } = require("mock-match-media");
     require("mock-match-media/jest-setup");
