@@ -91,31 +91,58 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
     };
 };
 
-// TODO: use new MediaQueryListEvent(type) extends Event(type)
-const defaultEvent = {
-    type: "match-media", // TODO: switch to "change"
-    bubbles: false,
-    cancelBubble: false,
-    cancelable: false,
-    composed: false,
-    target: null,
-    currentTarget: null,
-    defaultPrevented: false,
-    eventPhase: 0,
-    isTrusted: false,
-    initEvent: () => {},
-    composedPath: () => [],
-    preventDefault: () => {},
-    stopImmediatePropagation: () => {},
-    stopPropagation: () => {},
-    returnValue: true,
-    srcElement: null,
+const now = Date.now();
+
+// Event was added in node 15, so until we drop the support for versions before it, we need to use this
+class EventLegacy {
+    type: "change";
+    timeStamp: number;
+
+    bubbles = false;
+    cancelBubble = false;
+    cancelable = false;
+    composed = false;
+    target = null;
+    currentTarget = null;
+    defaultPrevented = false;
+    eventPhase = 0;
+    isTrusted = false;
+    initEvent = () => {};
+    composedPath = () => [];
+    preventDefault = () => {};
+    stopImmediatePropagation = () => {};
+    stopPropagation = () => {};
+    returnValue = true;
+    srcElement = null;
     // See https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
-    NONE: 0,
-    CAPTURING_PHASE: 1,
-    AT_TARGET: 2,
-    BUBBLING_PHASE: 3,
-};
+    NONE = 0;
+    CAPTURING_PHASE = 1;
+    AT_TARGET = 2;
+    BUBBLING_PHASE = 3;
+    constructor(type: "change") {
+        this.type = type;
+        this.timeStamp = Date.now() - now; // See https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#value
+    }
+}
+
+// @ts-expect-error
+const EventCompat: typeof Event = typeof Event === "undefined" ? EventLegacy : Event;
+
+export class MediaQueryListEvent extends EventCompat {
+    readonly media: string;
+    readonly matches: boolean;
+    constructor(
+        type: "change",
+        options: {
+            media?: string;
+            matches?: boolean;
+        } = {},
+    ) {
+        super(type);
+        this.media = options.media || "";
+        this.matches = options.matches || false;
+    }
+}
 
 // Cannot use MediaState here as setMedia is exposed in the API
 export const setMedia = (media: Record<string, string>) => {
@@ -134,12 +161,11 @@ export const setMedia = (media: Record<string, string>) => {
             for (const [query, previousMatches] of queryMatchMap.entries()) {
                 const matches = match(query, state);
                 if (previousMatches !== matches) {
-                    listener({
-                        ...defaultEvent,
-                        timeStamp: Date.now(),
+                    const event = new MediaQueryListEvent("change", {
                         matches,
                         media: query,
                     });
+                    listener(event);
                 }
                 queryMatchMap.set(query, matches);
             }
