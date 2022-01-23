@@ -1,24 +1,25 @@
 const test = require("ava");
 const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 
-const waitFor = async (cb) => {
-    await cb().catch(() => {
-        return new Promise((res, rej) => waitFor(cb).then(res).catch(rej), 10);
-    });
-};
-
 test.afterEach(() => {
     // cleanup listeners and state after each test
     cleanup();
 });
 
-test(".addListener()", async (t) => {
+const mock = () => {
+    const calls = [];
+    return [
+        (event) => {
+            calls.push(event);
+        },
+        calls,
+    ];
+};
+
+test.serial(".addListener()", (t) => {
     const mql = matchMedia("(min-width: 500px)");
 
-    const calls = [];
-    const cb = (event) => {
-        calls.push(event);
-    };
+    const [cb, calls] = mock();
 
     mql.addListener(cb);
 
@@ -59,13 +60,10 @@ test(".addListener()", async (t) => {
     t.pass();
 });
 
-test(".addEventListener()", async (t) => {
+test.serial(".addEventListener()", (t) => {
     const mql = matchMedia("(min-width: 500px)");
 
-    const calls = [];
-    const cb = (event) => {
-        calls.push(event);
-    };
+    const [cb, calls] = mock();
 
     mql.addEventListener("change", cb);
 
@@ -106,13 +104,10 @@ test(".addEventListener()", async (t) => {
     t.pass();
 });
 
-test("listeners get only called once when multiple features change", async (t) => {
+test.serial("listeners get only called once when multiple features change", (t) => {
     const mql = matchMedia("(min-width: 500px) and (min-height: 200px)");
 
-    const calls = [];
-    const cb = (event) => {
-        calls.push(event);
-    };
+    const [cb, calls] = mock();
 
     t.is(mql.matches, false);
 
