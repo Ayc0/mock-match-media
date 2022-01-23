@@ -40,9 +40,6 @@ const addListener = (query: Query, callback: Listener) => {
 const removeListener = (query: Query, callback: Listener) => {
     const features = getFeaturesFromQuery(query);
     features.forEach((feature) => {
-        if (!listeners.has(feature)) {
-            return;
-        }
         const listener = listeners.get(feature);
         if (!listener) {
             return;
