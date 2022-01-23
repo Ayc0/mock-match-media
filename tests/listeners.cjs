@@ -143,3 +143,5 @@ test("listeners get only called once when multiple features change", async (t) =
 });
 
 test.todo("check mql.onchange");
+test.todo("check mql.dispatchEvent");
+test.todo("check {once: true} in addEventListener");

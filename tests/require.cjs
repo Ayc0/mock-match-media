@@ -25,3 +25,5 @@ test("can import mock-match-media/jest-setup from CJS", (t) => {
     delete global.matchMedia;
     t.pass();
 });
+
+test.todo("test that MediaQueryListEvent is present globally");

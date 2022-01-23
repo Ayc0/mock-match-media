@@ -50,15 +50,17 @@ const removeListener = (query: Query, callback: Listener) => {
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
     let queryTyped = query as Query;
-    let matches;
+    let initiallyMatched;
     try {
-        matches = match(queryTyped, state);
+        initiallyMatched = match(queryTyped, state);
     } catch (e) {
         queryTyped = "not all" as Query;
-        matches = false;
+        initiallyMatched = false;
     }
     return {
-        matches,
+        get matches() {
+            return match(queryTyped, state);
+        },
         media: query,
         onchange: () => {
             throw new Error("not supported");
@@ -68,7 +70,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
                 return;
             }
             const queryMatchMap = getQueryMatchMap(callback);
-            queryMatchMap.set(queryTyped, matches);
+            queryMatchMap.set(queryTyped, initiallyMatched);
             addListener(queryTyped, callback);
         },
         removeEventListener: (event, callback) => {
@@ -82,15 +84,16 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         },
         addListener: (callback) => {
             const queryMatchMap = getQueryMatchMap(callback!);
-            queryMatchMap.set(queryTyped, matches);
+            queryMatchMap.set(queryTyped, initiallyMatched);
             addListener(queryTyped, callback!);
         },
         removeListener: (callback) => removeListener(queryTyped, callback!),
     };
 };
 
+// TODO: use new MediaQueryListEvent(type) extends Event(type)
 const defaultEvent = {
-    type: "match-media",
+    type: "match-media", // TODO: switch to "change"
     bubbles: false,
     cancelBubble: false,
     cancelable: false,
