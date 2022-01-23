@@ -255,6 +255,26 @@ test.serial("the 2 kinds of listeners can reset each other", (t) => {
     t.pass();
 });
 
+test.serial("the loose state should disappear after a removeListener", (t) => {
+    const mql1 = matchMedia("(min-width: 500px)");
+    const [cb1, calls1] = mock();
+    mql1.addListener(cb1);
+    mql1.removeListener(cb1);
+    mql1.addEventListener("change", cb1);
+    mql1.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls1.length, 0);
+
+    const mql2 = matchMedia("(min-width: 500px)");
+    const [cb2, calls2] = mock();
+    mql2.addListener(cb2);
+    mql2.removeEventListener("change", cb2);
+    mql2.addEventListener("change", cb2);
+    mql2.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls2.length, 0);
+
+    t.pass();
+});
+
 test.serial("the listeners and onchange are fired twice when set together", (t) => {
     const mql1 = matchMedia("(min-width: 500px)");
     const [cb1, calls1] = mock();
@@ -287,4 +307,36 @@ test.serial("the listeners can't disable onchange", (t) => {
     t.is(calls2.length, 1);
 });
 
-test.todo("check {once: true} in addEventListener");
+test.serial("once: true clears all listeners after 1 call", (t) => {
+    const mql = matchMedia("(min-width: 500px)");
+    const [cb, calls] = mock();
+    mql.addListener(cb);
+    mql.addEventListener("change", cb);
+    mql.addEventListener("change", cb, { once: true });
+
+    mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls.length, 1);
+
+    // There is no more listener
+    mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls.length, 1);
+
+    // It only clear once too
+    mql.addEventListener("change", cb);
+    mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls.length, 2);
+});
+
+test.serial("once: true should be cleared after a regular removeEventListener", (t) => {
+    const mql = matchMedia("(min-width: 500px)");
+    const [cb, calls] = mock();
+    mql.addEventListener("change", cb, { once: true });
+    mql.removeEventListener("change", cb);
+    mql.addEventListener("change", cb);
+
+    mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls.length, 1);
+    // The listener works as expected
+    mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls.length, 2);
+});

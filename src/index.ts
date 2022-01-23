@@ -13,7 +13,7 @@ const getFeaturesFromQuery = (query: Query): Set<Feature> => {
     return features;
 };
 
-type Listener = (event: MediaQueryListEvent) => void;
+type Callback = (event: MediaQueryListEvent) => void;
 type MQL = ReturnType<typeof matchMedia>;
 
 const MQLs = new Map<MQL, { clear: () => void; previousMatched: boolean; features: Set<Feature> }>();
@@ -27,14 +27,22 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         queryTyped = "not all" as Query;
         previousMatched = false;
     }
-    const listeners = new Set<Listener>();
-    const looseCallbacks = new WeakSet<Listener>();
+    const callbacks = new Set<Callback>();
+    const looseCallbacks = new WeakSet<Callback>();
+    const onces = new WeakSet<Callback>();
 
     const clear = () => {
-        for (const listener of listeners) {
-            looseCallbacks.delete(listener);
+        for (const callback of callbacks) {
+            looseCallbacks.delete(callback);
+            onces.delete(callback);
         }
-        listeners.clear();
+        callbacks.clear();
+    };
+
+    const removeListener = (callback: Callback) => {
+        callbacks.delete(callback);
+        looseCallbacks.delete(callback);
+        onces.delete(callback);
     };
 
     const mql: MQL = {
@@ -43,16 +51,25 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         },
         media: query,
         onchange: null,
-        addEventListener: (event, callback) => {
-            if (event === "change" && callback) listeners.add(callback);
+        addEventListener: (event, callback, options) => {
+            if (event === "change" && callback) {
+                callbacks.add(callback);
+
+                if (typeof options === "object" && options?.once) onces.add(callback);
+            }
         },
         removeEventListener: (event, callback) => {
-            if (event === "change") listeners.delete(callback);
+            if (event === "change") removeListener(callback);
         },
         dispatchEvent: (event: MediaQueryListEvent) => {
             mql.onchange?.(event);
-            listeners.forEach((listener) => {
-                if (event.type === "change" || looseCallbacks.has(listener)) listener(event);
+            callbacks.forEach((callback) => {
+                if (event.type === "change" || looseCallbacks.has(callback)) {
+                    callback(event);
+                    if (onces.has(callback)) {
+                        removeListener(callback);
+                    }
+                }
             });
             // TODO: target and currentTarget
             // Object.defineProperty(event, "target", { value: mql });
@@ -61,12 +78,11 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         addListener: (callback) => {
             if (!callback) return;
             looseCallbacks.add(callback);
-            listeners.add(callback);
+            callbacks.add(callback);
         },
         removeListener: (callback) => {
             if (!callback) return;
-            looseCallbacks.delete(callback);
-            listeners.delete(callback!);
+            removeListener(callback);
         },
     };
 
