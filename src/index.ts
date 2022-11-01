@@ -50,9 +50,25 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         onchange: null,
         addEventListener: (event, callback, options) => {
             if (event === "change" && callback) {
+                const isAlreadyListed = callbacks.has(callback);
                 callbacks.add(callback);
 
-                if (typeof options === "object" && options?.once) onces.add(callback);
+                const hasOnce = typeof options === "object" && options?.once;
+
+                // If it doesn’t have `once: true`, but it was previously added with one, the `once` status should be lifted
+                if (!hasOnce) {
+                    onces.delete(callback);
+                    return;
+                }
+
+                // If the callback is already listed in the list of callback to call, but not as a `once`,
+                // it means that it was added without the flag and thus shouldn’t be treated as such.
+                if (isAlreadyListed && !onces.has(callback)) {
+                    return;
+                }
+
+                // Otherwise, use the `once` flag
+                onces.add(callback);
             }
         },
         removeEventListener: (event, callback) => {
