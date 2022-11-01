@@ -1,5 +1,7 @@
 Simple server-side compatible substitution for `window.matchMedia()` based on [css-mediaquery](https://github.com/ericf/css-mediaquery).
 
+**Supports Node:** v12, v14, v16, v18
+
 1. [Usage](#usage)
    1. [Listeners](#listeners)
    2. [Cleanup](#cleanup)
