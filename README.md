@@ -131,15 +131,4 @@ You can find an example [here](https://github.com/Ayc0/mock-match-media-examples
 
 ## NextJS
 
-In `server.js`, you can do:
-
-```js
-require("mock-match-media/polyfill");
-const { setMedia } = require("mock-match-media");
-
-setMedia({
-    // your config
-});
-```
-
-You can find an example [here](https://github.com/Ayc0/mock-match-media-examples/tree/master/next) that includes a custom `server.js` and a basic component.
+You can find an example [here](https://github.com/Ayc0/mock-match-media-examples/tree/master/next) for how to use `mock-match-media` with NextJS.
