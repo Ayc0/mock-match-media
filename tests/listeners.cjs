@@ -258,6 +258,7 @@ test.serial("the 2 kinds of listeners can reset each other", (t) => {
     t.pass();
 });
 
+// Note: the concept of "loose" state disappeared from the codebase, but this test is kept to avoid regressions
 test.serial("the loose state should disappear after a removeListener", (t) => {
     const mql1 = matchMedia("(min-width: 500px)");
     const [cb1, calls1] = mock();

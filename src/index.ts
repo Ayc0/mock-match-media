@@ -28,12 +28,10 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         previousMatched = false;
     }
     const callbacks = new Set<Callback>();
-    const looseCallbacks = new WeakSet<Callback>();
     const onces = new WeakSet<Callback>();
 
     const clear = () => {
         for (const callback of callbacks) {
-            looseCallbacks.delete(callback);
             onces.delete(callback);
         }
         callbacks.clear();
@@ -41,7 +39,6 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
 
     const removeListener = (callback: Callback) => {
         callbacks.delete(callback);
-        looseCallbacks.delete(callback);
         onces.delete(callback);
     };
 
@@ -64,7 +61,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         dispatchEvent: (event: MediaQueryListEvent) => {
             mql.onchange?.(event);
             callbacks.forEach((callback) => {
-                if (event.type === "change" || looseCallbacks.has(callback)) {
+                if (event.type === "change") {
                     callback(event);
                     if (onces.has(callback)) {
                         removeListener(callback);
@@ -77,7 +74,6 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         },
         addListener: (callback) => {
             if (!callback) return;
-            looseCallbacks.add(callback);
             callbacks.add(callback);
         },
         removeListener: (callback) => {
