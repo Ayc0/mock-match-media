@@ -28,12 +28,10 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         previousMatched = false;
     }
     const callbacks = new Set<Callback>();
-    const looseCallbacks = new WeakSet<Callback>();
     const onces = new WeakSet<Callback>();
 
     const clear = () => {
         for (const callback of callbacks) {
-            looseCallbacks.delete(callback);
             onces.delete(callback);
         }
         callbacks.clear();
@@ -41,7 +39,6 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
 
     const removeListener = (callback: Callback) => {
         callbacks.delete(callback);
-        looseCallbacks.delete(callback);
         onces.delete(callback);
     };
 
@@ -53,9 +50,25 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         onchange: null,
         addEventListener: (event, callback, options) => {
             if (event === "change" && callback) {
+                const isAlreadyListed = callbacks.has(callback);
                 callbacks.add(callback);
 
-                if (typeof options === "object" && options?.once) onces.add(callback);
+                const hasOnce = typeof options === "object" && options?.once;
+
+                // If it doesn’t have `once: true`, but it was previously added with one, the `once` status should be lifted
+                if (!hasOnce) {
+                    onces.delete(callback);
+                    return;
+                }
+
+                // If the callback is already listed in the list of callback to call, but not as a `once`,
+                // it means that it was added without the flag and thus shouldn’t be treated as such.
+                if (isAlreadyListed && !onces.has(callback)) {
+                    return;
+                }
+
+                // Otherwise, use the `once` flag
+                onces.add(callback);
             }
         },
         removeEventListener: (event, callback) => {
@@ -64,7 +77,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         dispatchEvent: (event: MediaQueryListEvent) => {
             mql.onchange?.(event);
             callbacks.forEach((callback) => {
-                if (event.type === "change" || looseCallbacks.has(callback)) {
+                if (event.type === "change") {
                     callback(event);
                     if (onces.has(callback)) {
                         removeListener(callback);
@@ -77,7 +90,6 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         },
         addListener: (callback) => {
             if (!callback) return;
-            looseCallbacks.add(callback);
             callbacks.add(callback);
         },
         removeListener: (callback) => {
