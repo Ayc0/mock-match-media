@@ -41,7 +41,7 @@ test.serial("`.addListener()`", (t) => {
     });
     t.is(calls.length, 2);
 
-    // cleanup make it so that new changes in the media won't trigger listeners
+    // cleanup make it so that new changes in the media won’t trigger listeners
     cleanupListeners();
     setMedia({
         width: "600px",
@@ -85,7 +85,7 @@ test.serial("`.addEventListener()`", (t) => {
     });
     t.is(calls.length, 2);
 
-    // cleanup make it so that new changes in the media won't trigger listeners
+    // cleanup make it so that new changes in the media won’t trigger listeners
     cleanupListeners();
     setMedia({
         width: "600px",
@@ -120,7 +120,7 @@ test.serial("listeners get only called once when multiple features change", (t) 
     });
     t.is(calls.length, 0);
 
-    // here it checks that it won't first apply width, see if it matches, then apply height, see if it matches
+    // here it checks that it won’t first apply width, see if it matches, then apply height, see if it matches
     setMedia({
         width: "600px",
         height: "100px",
@@ -138,7 +138,7 @@ test.serial("listeners get only called once when multiple features change", (t) 
 });
 
 test.serial(
-    "ensure that when the same fn is used in multiple listeners, it won't be called twice on each change",
+    "ensure that when the same fn is used in multiple listeners, it won’t be called twice on each change",
     (t) => {
         const mql = matchMedia("(min-width: 500px)");
 
@@ -217,8 +217,8 @@ test.serial("`.dispatchEvent()` is only dispatched once", (t) => {
 test.serial("`.dispatchEvent()` doesn’t call no listener when the event isn’t `change`", (t) => {
     const mql = matchMedia("(min-width: 500px)");
 
-        const [cb1, calls1] = mock();
-        const [cb2, calls2] = mock();
+    const [cb1, calls1] = mock();
+    const [cb2, calls2] = mock();
     const [cb3, calls3] = mock();
 
     mql.addEventListener("change", cb1);
@@ -227,11 +227,11 @@ test.serial("`.dispatchEvent()` doesn’t call no listener when the event isn’
 
     mql.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
 
-        t.is(calls1.length, 0);
-        t.is(calls2.length, 0);
+    t.is(calls1.length, 0);
+    t.is(calls2.length, 0);
     t.is(calls3.length, 0);
 
-        t.pass();
+    t.pass();
 });
 
 test.serial("the 2 kinds of listeners can reset each other", (t) => {
@@ -293,7 +293,7 @@ test.serial("the listeners and onchange are fired twice when set together", (t) 
     t.is(calls2.length, 2);
 });
 
-test.serial("the listeners can't disable `onchange`", (t) => {
+test.serial("the listeners can’t disable `onchange`", (t) => {
     const mql1 = matchMedia("(min-width: 500px)");
     const [cb1, calls1] = mock();
     mql1.onchange = cb1;
@@ -307,6 +307,15 @@ test.serial("the listeners can't disable `onchange`", (t) => {
     mql2.removeListener(cb2);
     mql2.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
     t.is(calls2.length, 1);
+
+    const mql3 = matchMedia("(min-width: 500px)");
+    const [cb3, calls3] = mock();
+    mql3.onchange = cb3;
+    mql3.addEventListener("change", cb3, { once: true });
+    mql3.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls3.length, 2); // 2 because of the .onchange + the .addEventListener
+    mql3.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    t.is(calls3.length, 3); // `once` didn’t prevent it from receiving the 2nd event
 });
 
 test.serial("`once: true` doesn’t clear any listener after 1 call", (t) => {
