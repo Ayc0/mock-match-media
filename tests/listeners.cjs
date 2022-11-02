@@ -214,27 +214,25 @@ test.serial("`.dispatchEvent()` is only dispatched once", (t) => {
     t.pass();
 });
 
-test.serial(
-    "`.dispatchEvent()` doesn’t call neither listeners, nor the event listeners when the event isn't `change`",
-    (t) => {
-        const mql1 = matchMedia("(min-width: 500px)");
-        const mql2 = matchMedia("(min-width: 500px)");
+test.serial("`.dispatchEvent()` doesn’t call no listener when the event isn’t `change`", (t) => {
+    const mql = matchMedia("(min-width: 500px)");
 
         const [cb1, calls1] = mock();
         const [cb2, calls2] = mock();
+    const [cb3, calls3] = mock();
 
-        mql1.addEventListener("change", cb1);
-        mql2.addListener(cb2);
+    mql.addEventListener("change", cb1);
+    mql.addListener(cb2);
+    mql.onchange = cb3;
 
-        mql1.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
-        mql2.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
+    mql.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
 
         t.is(calls1.length, 0);
         t.is(calls2.length, 0);
+    t.is(calls3.length, 0);
 
         t.pass();
-    },
-);
+});
 
 test.serial("the 2 kinds of listeners can reset each other", (t) => {
     const mql1 = matchMedia("(min-width: 500px)");
