@@ -249,8 +249,8 @@ test.serial("the 2 kinds of listeners can reset each other", (t) => {
     mql2.addListener(cb2);
     mql2.removeEventListener("change", cb2);
 
-    mql1.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
-    mql2.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
+    mql1.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+    mql2.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
 
     t.is(calls1.length, 0);
     t.is(calls2.length, 0);
