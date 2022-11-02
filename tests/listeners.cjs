@@ -342,3 +342,17 @@ test.serial("`once: true` should be cleared after a regular `removeEventListener
     mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
     t.is(calls.length, 2);
 });
+
+test.serial("`.dispatchEvent` can only receive events", (t) => {
+    const mql = matchMedia("(min-width: 500px)");
+    if (typeof Event !== "undefined") {
+        t.is(mql.dispatchEvent(new Event("hello")), true);
+    }
+    t.is(mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" })), true);
+
+    const err1 = t.throws(() => mql.dispatchEvent());
+    t.is(err1.message, `Failed to execute 'dispatchEvent' on 'EventTarget': 1 argument required, but only 0 present.`);
+
+    const err2 = t.throws(() => mql.dispatchEvent("hello"));
+    t.is(err2.message, `Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'.`);
+});
