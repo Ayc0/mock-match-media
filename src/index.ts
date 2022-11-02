@@ -75,13 +75,14 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
             if (event === "change") removeListener(callback);
         },
         dispatchEvent: (event: MediaQueryListEvent) => {
+            if (event.type !== "change") {
+                return true;
+            }
             mql.onchange?.(event);
             callbacks.forEach((callback) => {
-                if (event.type === "change") {
-                    callback(event);
-                    if (onces.has(callback)) {
-                        removeListener(callback);
-                    }
+                callback(event);
+                if (onces.has(callback)) {
+                    removeListener(callback);
                 }
             });
             // TODO: target and currentTarget
