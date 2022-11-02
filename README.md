@@ -1,16 +1,32 @@
 Simple server-side compatible substitution for `window.matchMedia()` based on [css-mediaquery](https://github.com/ericf/css-mediaquery).
 
-**Supports Node:** v12, v14, v16, v18
-
-1. [Usage](#usage)
+1. [What is `mock-match-media`?](#what-is-mock-match-media)
+2. [Usage](#usage)
    1. [Listeners](#listeners)
    2. [Cleanup](#cleanup)
+      1. [`cleanupListeners`](#cleanuplisteners)
+      2. [`cleanupMedia`](#cleanupmedia)
+      3. [`cleanup`](#cleanup-1)
    3. [Polyfill](#polyfill)
    4. [Other features](#other-features)
+      1. [`once` event listeners](#once-event-listeners)
+      2. [`.dispatchEvent` & `MediaQueryListEvent`](#dispatchevent--mediaquerylistevent)
+      3. [`.onchange`](#onchange)
+      4. [Interactions between multiple listeners](#interactions-between-multiple-listeners)
    5. [ESM](#esm)
-2. [How to use with other libraries](#how-to-use-with-other-libraries)
+3. [How to use with other libraries](#how-to-use-with-other-libraries)
    1. [Jest](#jest)
    2. [NextJS](#nextjs)
+
+# What is `mock-match-media`?
+
+`mock-match-media` is a [ponyfill](https://github.com/sindresorhus/ponyfill) for `window.matchMedia` but for Node.
+
+This mock is fully compliant with [the spec](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/#the-mediaquerylist-interface) (see doc on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) or [Other features](#other-features)).
+
+We currently support Node v12, v14, v16, v18 and v19 ![Node CI tests](https://github.com/Ayc0/mock-match-media/actions/workflows/main.yml/badge.svg).
+
+It's also coded in TypeScript.
 
 # Usage
 
@@ -27,6 +43,8 @@ setMedia({
 
 matchMedia("(min-width: 250px)").matches;
 // > false
+matchMedia("(min-width: 40px)").matches;
+// > true
 
 // Only redefine what changed
 setMedia({
@@ -78,9 +96,21 @@ setMedia({
 
 `mock-match-media` provides 3 cleanup functions:
 
--   `cleanupListeners` to clear all listeners called via `matchMedia().addListener()` or `matchMedia().addEventListener()` (to avoid calling in side effects),
--   `cleanupMedia` to reset the state of the window set via `setMedia()`,
--   `cleanup` that calls the 2 other functions to clean everything.
+```js
+const { cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
+```
+
+### `cleanupListeners`
+
+`cleanupListeners` clears all listeners called via `matchMedia().addListener()` or `matchMedia().addEventListener()` (to avoid calling in side effects).
+
+### `cleanupMedia`
+
+`cleanupMedia` resets the state of the window set via `setMedia()`.
+
+### `cleanup`
+
+`cleanup` at the same time clears all listeners (like `cleanupListeners`), and clears the state of the window (like `cleanupMedia`).
 
 ## Polyfill
 
@@ -97,11 +127,52 @@ And thus, you won't have to import those (you'll still have to import `setMedia`
 
 This library covers most of the aspects of `matchMedia`. In addition to the API presented above, it also supports:
 
--   `mql.onchange = listener`,
--   `mql.dispatchEvent(new Event('type'))`,
--   `mql.dispatchEvent(new MediaQueryListEvent('change', { media: '...', matches: ... }))`,
--   `mql.addEventListener('change', listener, { once: true })` (and the other options too even though they are no-nops),
--   having `mql.addListener` & `mql.addEventListener` & `mql.onchange` on the same MQL **AND** with the same listener.
+### `once` event listeners
+
+```js
+const { matchMedia } = require("mock-match-media");
+
+const mql = matchMedia("(min-width: 250px)");
+mql.addEventListener("change", listener, { once: true }); // the listener will be removed after 1 received event
+```
+
+### `.dispatchEvent` & `MediaQueryListEvent`
+
+Like every other [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget), you can `.dispatchEvent(event)` to manually dispatch event (it’s not that useful to be honest, but as it’s in the spec, we implemented it).
+
+```js
+const { matchMedia, MediaQueryListEvent } = require("mock-match-media");
+
+const mql = matchMedia("(min-width: 250px)");
+mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" }));
+// Works also with a regular event but it’s not recommended:
+mql.dispatchEvent(new Event("change"));
+```
+
+### `.onchange`
+
+Like on any HTML element, you can attach a `.onchange` legacy event handler:
+
+```js
+const { matchMedia } = require("mock-match-media");
+
+const mql = matchMedia("(min-width: 250px)");
+mql.onchange = listener;
+```
+
+### Interactions between multiple listeners
+
+We follow how browsers implemented interactions like:
+
+```js
+const { matchMedia } = require("mock-match-media");
+
+const mql = matchMedia("(min-width: 250px)");
+mql.onchange = listener;
+mql.addListener(listener);
+mql.addEventListener("change", listener);
+mql.addEventListener("change", listener, { once: true });
+```
 
 And all of those are tested.
 
