@@ -4,6 +4,7 @@ node_modules/
 src/
 tests/
 .github/
+.vscode/
 
 .cache/
 .*_cache_*/
