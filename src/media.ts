@@ -164,7 +164,7 @@ function toPx(length: string) {
     switch (unit) {
         case "em":
         case "rem":
-            return value * 16;
+            return value * 16; // default px to em conversion. TODO make it customizable;
         case "in":
             return value * 96;
         case "cm":
