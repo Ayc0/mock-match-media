@@ -140,31 +140,14 @@ function convertResolutionToDpi(resolution: string) {
     }
 }
 
-type LengthUnit =
-    | "em"
-    | "ex"
-    | "cap"
-    | "ch"
-    | "ic"
-    | "lh"
-    | "rem"
-    | "rex"
-    | "rch"
-    | "rcap"
-    | "ric"
-    | "rlh"
-    | "vw"
-    | "vh"
-    | "vi"
-    | "vb"
-    | "vmin"
-    | "vmax"
-    | "in"
-    | "cm"
-    | "mm"
-    | "pt"
-    | "pc"
-    | "Q";
+// https://www.w3.org/TR/css-values-4/#lengths
+type AbsoluteLengthUnit = "cm" | "mm" | "Q" | "in" | "pc" | "pt" | "px";
+type FontRelativeUnit = "em" | "rem" | "ex" | "rex" | "cap" | "rcap" | "ch" | "rch" | "ic" | "ric" | "lh" | "rlh";
+type ViewportPercentageLengthStartUnit = "v" | "sv" | "lv" | "dv";
+type ViewportPercentageLengthEndUnit = "w" | "h" | "i" | "b" | "min" | "max";
+type ViewportPercentageLengthUnit = `${ViewportPercentageLengthStartUnit}${ViewportPercentageLengthEndUnit}`;
+type LengthUnit = AbsoluteLengthUnit | FontRelativeUnit | ViewportPercentageLengthUnit;
+
 const LENGTH_REGEX =
     /(\d+(?:\.\d+)?)(em|ex|cap|ch|ic|lh|rem|rex|rch|rcap|ric|rlh|vw|vh|vi|vb|vmin|vmax|in|cm|mm|pt|pc|Q)/;
 function toPx(length: string) {
