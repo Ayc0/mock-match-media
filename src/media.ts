@@ -115,3 +115,105 @@ const ranges = [
         unit: "ratio",
     },
 ] as const;
+
+type ResolutionUnit = "dpi" | "dpcm" | "dppx" | "x";
+const RESOLUTION_REGEX = /(\d+(?:\.\d+)?)(dpi|dpcm|dppx|x)/;
+function convertResolutionToDpi(resolution: string) {
+    const match = resolution.match(RESOLUTION_REGEX);
+
+    if (!match) {
+        return null;
+    }
+
+    const [, _value, _unit] = match;
+    const value = parseFloat(_value);
+    const unit = _unit as ResolutionUnit;
+
+    switch (unit) {
+        case "dpcm":
+            return value / 2.54;
+        case "dppx":
+        case "x":
+            return value * 96;
+        default:
+            return value;
+    }
+}
+
+type LengthUnit =
+    | "em"
+    | "ex"
+    | "cap"
+    | "ch"
+    | "ic"
+    | "lh"
+    | "rem"
+    | "rex"
+    | "rch"
+    | "rcap"
+    | "ric"
+    | "rlh"
+    | "vw"
+    | "vh"
+    | "vi"
+    | "vb"
+    | "vmin"
+    | "vmax"
+    | "in"
+    | "cm"
+    | "mm"
+    | "pt"
+    | "pc"
+    | "Q";
+const LENGTH_REGEX =
+    /(\d+(?:\.\d+)?)(em|ex|cap|ch|ic|lh|rem|rex|rch|rcap|ric|rlh|vw|vh|vi|vb|vmin|vmax|in|cm|mm|pt|pc|Q)/;
+function toPx(length: string) {
+    const match = length.match(LENGTH_REGEX);
+
+    if (!match) {
+        return null;
+    }
+
+    const [, _value, _unit] = match;
+    const value = parseFloat(_value);
+    const unit = _unit as LengthUnit;
+
+    switch (unit) {
+        case "em":
+        case "rem":
+            return value * 16;
+        case "in":
+            return value * 96;
+        case "cm":
+            return (value * 96) / 2.54;
+        case "mm":
+            return (value * 96) / 2.54 / 10;
+        case "Q":
+            return (value * 96) / 2.54 / 40;
+        case "pc":
+            return (value * 96) / 6;
+        case "pt":
+            return (value * 96) / 72;
+        case "ex":
+        case "rex":
+        case "cap":
+        case "rcap":
+        case "ch":
+        case "rch":
+        case "ic":
+        case "ric":
+        case "lh":
+        case "rlh":
+        case "vw":
+        case "vh":
+        case "vi":
+        case "vb":
+        case "vmin":
+        case "vmax":
+            console.log(unit + " isn’t supported yet");
+            return null; // TODO: implement those later
+        default:
+            console.log(unit + " isn’t supported");
+            return null;
+    }
+}
