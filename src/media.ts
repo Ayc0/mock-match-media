@@ -71,11 +71,11 @@ const discrete = [
 
 const ranges = [
     {
-        name: "width",
+        name: "width", // ✅
         unit: "length",
     },
     {
-        name: "height",
+        name: "height", // ✅
         unit: "length",
     },
     {
@@ -101,12 +101,12 @@ const ranges = [
     },
     {
         // @deprecated
-        name: "device-width",
+        name: "device-width", // ✅
         unit: "length",
     },
     {
         // @deprecated
-        name: "device-height",
+        name: "device-height", // ✅
         unit: "length",
     },
     {
