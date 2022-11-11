@@ -79,8 +79,8 @@ const ranges = [
         unit: "length",
     },
     {
-        name: "aspect-ratio",
-        unit: "ratio", // r OR w / h (all integers)
+        name: "aspect-ratio", // ✅
+        unit: "ratio", // r OR w / h
     },
     {
         name: "resolution",
@@ -111,7 +111,7 @@ const ranges = [
     },
     {
         // @deprecated
-        name: "device-aspect-ratio",
+        name: "device-aspect-ratio", // ✅
         unit: "ratio",
     },
 ] as const;
