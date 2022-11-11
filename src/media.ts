@@ -150,7 +150,7 @@ type LengthUnit = AbsoluteLengthUnit | FontRelativeUnit | ViewportPercentageLeng
 
 const LENGTH_REGEX =
     /(\d+(?:\.\d+)?)(em|ex|cap|ch|ic|lh|rem|rex|rch|rcap|ric|rlh|vw|vh|vi|vb|vmin|vmax|in|cm|mm|pt|pc|Q)/;
-function toPx(length: string) {
+function toPx(length: string, { em = 16 }: { em?: number } = {}) {
     const match = length.match(LENGTH_REGEX);
 
     if (!match) {
@@ -164,7 +164,7 @@ function toPx(length: string) {
     switch (unit) {
         case "em":
         case "rem":
-            return value * 16; // default px to em conversion. TODO make it customizable;
+            return value * em;
         case "in":
             return value * 96;
         case "cm":
