@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+
+import { getReleases } from "../../lib/get-releases";
+import { renderMarkdown } from "@astrojs/markdown-remark";
+
+const releases = await getReleases();
+
+const releaseWithMarkdown = await Promise.all(
+    releases.map(async (release) => ({
+        ...release,
+        body: (await renderMarkdown(release.body, {})).code,
+    })),
+);
+---
+
+<Base title="Releases">
+    <main class="mt-8 px-8 md:px-0 mx-auto prose prose-zinc dark:prose-invert">
+        {
+            releaseWithMarkdown.map((release) => {
+                return (
+                    <>
+                        <article>
+                            <h2 id={release.tag_name}>
+                                {release.name} • <a href={release.html_url}>See in GitHub</a>
+                            </h2>
+                            <p class="dark:text-zinc-400 font-bold">
+                                {new Date(release.published_at).toLocaleDateString(undefined, {
+                                    dateStyle: "medium",
+                                })}
+                            </p>
+                            <p class="dark:text-zinc-400" set:html={release.body} />
+                        </article>
+                        <hr />
+                    </>
+                );
+            })
+        }
+
+        <a href="/" class="no-underline" data-pagefind-ignore>
+            <p class="text-center font-bold">Back To Home</p>
+        </a>
+    </main>
+</Base>

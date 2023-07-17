@@ -4,3 +4,6 @@ node_modules/
 dist/
 .cache/
 .*_cache_*/
+
+.yarn/*
+!.yarn/releases/
