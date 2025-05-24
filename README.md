@@ -1,22 +1,22 @@
-Simple server-side compatible substitution for `window.matchMedia()` based on [css-mediaquery](https://github.com/ericf/css-mediaquery).
+Simple server-side compatible substitution for `window.matchMedia()` based on [media-query-fns](https://github.com/tbjgolden/media-query-fns).
 
 1. [What is `mock-match-media`?](#what-is-mock-match-media)
 2. [Usage](#usage)
-   1. [Listeners](#listeners)
-   2. [Cleanup](#cleanup)
-      1. [`cleanupListeners`](#cleanuplisteners)
-      2. [`cleanupMedia`](#cleanupmedia)
-      3. [`cleanup`](#cleanup-1)
-   3. [Polyfill](#polyfill)
-   4. [Other features](#other-features)
-      1. [`once` event listeners](#once-event-listeners)
-      2. [`.dispatchEvent` & `MediaQueryListEvent`](#dispatchevent--mediaquerylistevent)
-      3. [`.onchange`](#onchange)
-      4. [Interactions between multiple listeners](#interactions-between-multiple-listeners)
-   5. [ESM](#esm)
+    1. [Listeners](#listeners)
+    2. [Cleanup](#cleanup)
+        1. [`cleanupListeners`](#cleanuplisteners)
+        2. [`cleanupMedia`](#cleanupmedia)
+        3. [`cleanup`](#cleanup-1)
+    3. [Polyfill](#polyfill)
+    4. [Other features](#other-features)
+        1. [`once` event listeners](#once-event-listeners)
+        2. [`.dispatchEvent` \& `MediaQueryListEvent`](#dispatchevent--mediaquerylistevent)
+        3. [`.onchange`](#onchange)
+        4. [Interactions between multiple listeners](#interactions-between-multiple-listeners)
+    5. [ESM](#esm)
 3. [How to use with other libraries](#how-to-use-with-other-libraries)
-   1. [Jest](#jest)
-   2. [NextJS](#nextjs)
+    1. [Jest](#jest)
+    2. [NextJS](#nextjs)
 
 # What is `mock-match-media`?
 
@@ -37,7 +37,7 @@ const { matchMedia, setMedia } = require("mock-match-media");
 
 // Define current media
 setMedia({
-    width: "50px",
+    width: 50,
     type: "screen",
     orientation: "landscape",
     "prefers-color-scheme": "light",
@@ -50,7 +50,7 @@ matchMedia("(min-width: 40px)").matches;
 
 // Only redefine what changed
 setMedia({
-    width: "500px",
+    width: 500,
 });
 
 matchMedia("(min-width: 250px)").matches;
@@ -65,7 +65,7 @@ matchMedia("(min-width: 250px)").matches;
 const { matchMedia, setMedia } = require("mock-match-media");
 
 setMedia({
-    width: "50px",
+    width: 50,
 });
 
 const listener = (event) => console.log(event.matches);
@@ -77,19 +77,19 @@ matcher.addEventListener("change", listener);
 // matchMedia("(min-width: 250px)").addListener(event => console.log(event.matches));
 
 setMedia({
-    width: "100px",
+    width: 100,
 });
 // outputs nothing because `matches` hasn't changed
 
 setMedia({
-    width: "1000px",
+    width: 1000,
 });
 // outputs `true`
 
 matcher.removeEventListener("change", listener);
 
 setMedia({
-    width: "100px",
+    width: 100,
 });
 // outputs nothing because the listener is removed
 ```

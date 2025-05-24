@@ -35,7 +35,7 @@ test.serial.skip("unset", (t) => {
 
 test.serial.skip("600px", (t) => {
     setMedia({
-        height: "600px",
+        height: 600,
     });
 
     t.is(matchMedia("(min-device-height: 500px)").matches, true);
@@ -67,7 +67,7 @@ test.serial.skip("600px", (t) => {
 
 test.serial.skip("500px", (t) => {
     setMedia({
-        height: "500px",
+        height: 500,
     });
 
     t.is(matchMedia("(min-device-height: 500px)").matches, true);
@@ -99,7 +99,7 @@ test.serial.skip("500px", (t) => {
 
 test.serial.skip("400px", (t) => {
     setMedia({
-        height: "400px",
+        height: 400,
     });
 
     t.is(matchMedia("(min-device-height: 500px)").matches, false);
@@ -131,7 +131,7 @@ test.serial.skip("400px", (t) => {
 
 test.serial.skip("300px", (t) => {
     setMedia({
-        height: "300px",
+        height: 300,
     });
 
     t.is(matchMedia("(min-device-height: 500px)").matches, false);
@@ -163,7 +163,7 @@ test.serial.skip("300px", (t) => {
 
 test.serial.skip("200px", (t) => {
     setMedia({
-        height: "200px",
+        height: 200,
     });
 
     t.is(matchMedia("(min-device-height: 500px)").matches, false);

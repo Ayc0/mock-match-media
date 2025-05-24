@@ -41,7 +41,7 @@
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
-        "css-mediaquery": "^0.1.2"
+        "media-query-fns": "^2.0.0"
     },
     "devDependencies": {
         "ava": "^4.0.1",
