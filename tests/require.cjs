@@ -1,3 +1,5 @@
+// @ts-check
+
 const test = require("ava");
 
 test.serial("can import mock-match-media from CJS", (t) => {
@@ -21,6 +23,7 @@ test.serial("can import mock-match-media/polyfill from CJS", (t) => {
     t.is(global.matchMedia, matchMedia);
     t.is(global.MediaQueryListEvent, MediaQueryListEvent);
     delete require.cache[require.resolve("mock-match-media/polyfill")];
+    // @ts-expect-error
     delete global.matchMedia;
     t.pass();
 });
@@ -31,6 +34,7 @@ test.serial("can import mock-match-media/jest-setup from CJS", (t) => {
     require("mock-match-media/jest-setup");
     t.is(global.matchMedia, matchMedia);
     delete require.cache[require.resolve("mock-match-media/jest-setup")];
+    // @ts-expect-error
     delete global.matchMedia;
     t.pass();
 });

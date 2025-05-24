@@ -1,3 +1,5 @@
+// @ts-check
+
 const test = require("ava");
 const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
 
@@ -205,7 +207,7 @@ test.serial.skip("other syntax", (t) => {
     // floats
     t.is(matchMedia("(aspect-ratio: 1.0)").matches, true);
     // only support floats when only 1 number
-    t.is(matchMedia("(aspect-ratio: 16.0/16.0)").matches, false);
+    t.is(matchMedia("(aspect-ratio: 16.0/16.0)").matches, true);
     // can have spaces
     t.is(matchMedia("(aspect-ratio: 16/ 16)").matches, true);
     t.is(matchMedia("(aspect-ratio: 16 /16)").matches, true);

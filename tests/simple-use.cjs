@@ -1,3 +1,5 @@
+// @ts-check
+
 const test = require("ava");
 const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 

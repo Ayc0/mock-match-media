@@ -1,3 +1,5 @@
+// @ts-check
+
 const test = require("ava");
 const { matchMedia, setMedia, cleanupListeners, MediaQueryListEvent, cleanup } = require("mock-match-media");
 
@@ -6,6 +8,9 @@ test.afterEach(() => {
     cleanup();
 });
 
+/**
+ * @type {() => [(event: MediaQueryListEvent) => void, MediaQueryListEvent[]]}
+ */
 const mock = () => {
     const calls = [];
     return [
@@ -225,6 +230,7 @@ test.serial("`.dispatchEvent()` doesn’t call no listener when the event isn’
     mql.addListener(cb2);
     mql.onchange = cb3;
 
+    // @ts-expect-error
     mql.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
 
     t.is(calls1.length, 0);
@@ -263,6 +269,7 @@ test.serial("the loose state should disappear after a removeListener", (t) => {
     mql1.addListener(cb1);
     mql1.removeListener(cb1);
     mql1.addEventListener("change", cb1);
+    // @ts-expect-error
     mql1.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
     t.is(calls1.length, 0);
 
@@ -271,6 +278,7 @@ test.serial("the loose state should disappear after a removeListener", (t) => {
     mql2.addListener(cb2);
     mql2.removeEventListener("change", cb2);
     mql2.addEventListener("change", cb2);
+    // @ts-expect-error
     mql2.dispatchEvent(new MediaQueryListEvent("not-change", { matches: false, media: "(custom-non-valid)" }));
     t.is(calls2.length, 0);
 
@@ -359,9 +367,11 @@ test.serial("`.dispatchEvent` can only receive events", (t) => {
     }
     t.is(mql.dispatchEvent(new MediaQueryListEvent("change", { matches: false, media: "(custom-non-valid)" })), true);
 
+    // @ts-expect-error
     const err1 = t.throws(() => mql.dispatchEvent());
     t.is(err1.message, `Failed to execute 'dispatchEvent' on 'EventTarget': 1 argument required, but only 0 present.`);
 
+    // @ts-expect-error
     const err2 = t.throws(() => mql.dispatchEvent("hello"));
     t.is(err2.message, `Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'.`);
 });
