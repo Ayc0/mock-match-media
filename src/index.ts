@@ -1,6 +1,33 @@
-import { match, parse, Feature, Query, MediaState } from "css-mediaquery";
+import { compileQuery, matches, type Environment, type EvaluateResult, type SimplePerm } from "media-query-fns";
+
+type MediaState = { [key in keyof Environment as key extends `${infer Key}Px` ? Key : key]?: Environment[key] };
+
+const DEFAULT_ENV: Parameters<typeof matches>[1] = {
+    widthPx: 0,
+    deviceWidthPx: 0,
+    heightPx: 0,
+    deviceHeightPx: 0,
+    dppx: 1,
+};
+
+const PIXEL_FEATURES = ["width", "height", "deviceWidth", "deviceHeight"];
+const convertStateToEnv = (state: MediaState): Parameters<typeof matches>[1] => {
+    const env = { ...DEFAULT_ENV };
+
+    for (const [key, value] of Object.entries(state)) {
+        if (PIXEL_FEATURES.includes(key)) {
+            env[key + "Px"] = value;
+        } else {
+            env[key] = value;
+        }
+    }
+
+    return env;
+};
 
 let state: MediaState = {};
+
+type Feature = Exclude<keyof SimplePerm, "media-type">;
 
 const now = Date.now();
 
@@ -39,13 +66,10 @@ class EventLegacy {
 // @ts-expect-error
 const EventCompat: typeof Event = typeof Event === "undefined" ? EventLegacy : Event;
 
-const getFeaturesFromQuery = (query: Query): Set<Feature> => {
-    const parsedQuery = parse(query);
+const getFeaturesFromQuery = (query: EvaluateResult): Set<Feature> => {
     const features = new Set<Feature>();
-    parsedQuery.forEach((subQuery) => {
-        subQuery.expressions.forEach((expression) => {
-            features.add(expression.feature);
-        });
+    query.simplePerms.forEach((perm) => {
+        Object.keys(perm).forEach((feature) => features.add(feature as Feature));
     });
     return features;
 };
@@ -56,12 +80,12 @@ type MQL = ReturnType<typeof matchMedia>;
 const MQLs = new Map<MQL, { clear: () => void; previousMatched: boolean; features: Set<Feature> }>();
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
-    let queryTyped = query as Query;
+    let compiledQuery = compileQuery(query);
     let previousMatched;
     try {
-        previousMatched = match(queryTyped, state);
+        previousMatched = matches(compiledQuery, convertStateToEnv(state));
     } catch (e) {
-        queryTyped = "not all" as Query;
+        compiledQuery = compileQuery("not all");
         previousMatched = false;
     }
     const callbacks = new Set<Callback>();
@@ -81,7 +105,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
 
     const mql: MQL = {
         get matches() {
-            return match(queryTyped, state);
+            return matches(compiledQuery, convertStateToEnv(state));
         },
         media: query,
         onchange: null,
@@ -149,7 +173,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
     MQLs.set(mql, {
         previousMatched,
         clear,
-        features: getFeaturesFromQuery(queryTyped),
+        features: getFeaturesFromQuery(compiledQuery),
     });
 
     return mql;
@@ -171,24 +195,14 @@ export class MediaQueryListEvent extends EventCompat {
     }
 }
 
-const PIXEL_FEATURES = ["width", "height", "deviceWidth", "deviceHeight"];
-
 // Cannot use MediaState here as setMedia is exposed in the API
-export const setMedia = (media: Record<string, string | number>) => {
+export const setMedia = (media: MediaState) => {
     const changedFeatures = new Set<Feature>();
     Object.keys(media).forEach((feature) => {
         changedFeatures.add(feature as Feature);
-        let value;
-        if (PIXEL_FEATURES.includes(feature)) {
-            if (typeof media[feature] !== "number") {
-                throw new Error(feature + " expects number (pixel dimensions)");
-            }
-            value = media[feature] + "px";
-        } else {
-            value = media[feature];
-        }
-        state[feature] = value;
+        state[feature] = media[feature];
     });
+
     for (const [MQL, cache] of MQLs) {
         let found = false;
         for (const feature of cache.features) {
@@ -200,12 +214,12 @@ export const setMedia = (media: Record<string, string | number>) => {
         if (!found) {
             continue;
         }
-        const matches = match(MQL.media as Query, state);
-        if (matches === cache.previousMatched) {
+        const doesMatch = matches(compileQuery(MQL.media), convertStateToEnv(state));
+        if (doesMatch === cache.previousMatched) {
             continue;
         }
-        cache.previousMatched = matches;
-        MQL.dispatchEvent(new MediaQueryListEvent("change", { matches, media: MQL.media }));
+        cache.previousMatched = doesMatch;
+        MQL.dispatchEvent(new MediaQueryListEvent("change", { matches: doesMatch, media: MQL.media }));
     }
 };
 

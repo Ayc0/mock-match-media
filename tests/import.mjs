@@ -1,3 +1,5 @@
+// @ts-check
+
 import test from "ava";
 
 test.serial("can import mock-match-media from ESM", async (t) => {
