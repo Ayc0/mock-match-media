@@ -7,13 +7,13 @@ test.serial(".matches", (t) => {
     t.is(mql.matches, false);
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
 
     t.is(mql.matches, true);
 
     setMedia({
-        width: "300px",
+        width: 300,
     });
 
     t.is(mql.matches, false);
@@ -25,7 +25,7 @@ test.serial("cleanupMedia", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(doesMatch(), true);
 
@@ -37,7 +37,7 @@ test.serial("cleanup", (t) => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(doesMatch(), true);
 

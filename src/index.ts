@@ -171,12 +171,23 @@ export class MediaQueryListEvent extends EventCompat {
     }
 }
 
+const PIXEL_FEATURES = ["width", "height", "deviceWidth", "deviceHeight"];
+
 // Cannot use MediaState here as setMedia is exposed in the API
-export const setMedia = (media: Record<string, string>) => {
+export const setMedia = (media: Record<string, string | number>) => {
     const changedFeatures = new Set<Feature>();
     Object.keys(media).forEach((feature) => {
         changedFeatures.add(feature as Feature);
-        state[feature] = media[feature];
+        let value;
+        if (PIXEL_FEATURES.includes(feature)) {
+            if (typeof media[feature] !== "number") {
+                throw new Error(feature + " expects number (pixel dimensions)");
+            }
+            value = media[feature] + "px";
+        } else {
+            value = media[feature];
+        }
+        state[feature] = value;
     });
     for (const [MQL, cache] of MQLs) {
         let found = false;

@@ -24,27 +24,27 @@ test.serial("`.addListener()`", (t) => {
     mql.addListener(cb);
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(calls.length, 1);
     t.is(calls[0].matches, true);
 
     setMedia({
-        width: "300px",
+        width: 300,
     });
     t.is(calls.length, 2);
     t.is(calls[1].matches, false);
 
     // No new call
     setMedia({
-        width: "200px",
+        width: 200,
     });
     t.is(calls.length, 2);
 
     // cleanup make it so that new changes in the media won’t trigger listeners
     cleanupListeners();
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(calls.length, 2);
 
@@ -53,7 +53,7 @@ test.serial("`.addListener()`", (t) => {
     cleanup();
 
     setMedia({
-        width: "300px",
+        width: 300,
     });
     t.is(calls.length, 2);
 
@@ -68,27 +68,27 @@ test.serial("`.addEventListener()`", (t) => {
     mql.addEventListener("change", cb);
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(calls.length, 1);
     t.is(calls[0].matches, true);
 
     setMedia({
-        width: "300px",
+        width: 300,
     });
     t.is(calls.length, 2);
     t.is(calls[1].matches, false);
 
     // No new call
     setMedia({
-        width: "200px",
+        width: 200,
     });
     t.is(calls.length, 2);
 
     // cleanup make it so that new changes in the media won’t trigger listeners
     cleanupListeners();
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(calls.length, 2);
 
@@ -97,7 +97,7 @@ test.serial("`.addEventListener()`", (t) => {
     cleanup();
 
     setMedia({
-        width: "300px",
+        width: 300,
     });
     t.is(calls.length, 2);
 
@@ -115,21 +115,21 @@ test.serial("listeners get only called once when multiple features change", (t) 
     t.is(calls.length, 0);
 
     setMedia({
-        width: "300px",
-        height: "300px",
+        width: 300,
+        height: 300,
     });
     t.is(calls.length, 0);
 
     // here it checks that it won’t first apply width, see if it matches, then apply height, see if it matches
     setMedia({
-        width: "600px",
-        height: "100px",
+        width: 600,
+        height: 100,
     });
     t.is(calls.length, 0);
 
     setMedia({
-        width: "600px",
-        height: "300px",
+        width: 600,
+        height: 300,
     });
     t.is(calls.length, 1);
     t.is(calls[0].matches, true);
@@ -150,7 +150,7 @@ test.serial(
         mql.addListener(cb);
 
         setMedia({
-            width: "600px",
+            width: 600,
         });
         t.is(calls.length, 1);
 
@@ -172,7 +172,7 @@ test.serial("ensure that when the same fn is used in 2 different MQL, it will be
     mql4.addListener(cb);
 
     setMedia({
-        width: "600px",
+        width: 600,
     });
     t.is(calls.length, 4);
 
