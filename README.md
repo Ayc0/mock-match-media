@@ -22,11 +22,11 @@ Simple server-side compatible substitution for `window.matchMedia()` based on [m
 
 `mock-match-media` is a [ponyfill](https://github.com/sindresorhus/ponyfill) for `window.matchMedia` but for Node.
 
-This mock is fully compliant with [the spec](https://www.w3.org/TR/2016/WD-cssom-view-1-20160317/#the-mediaquerylist-interface) (see doc on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) or [Other features](#other-features)).
+This mock is fully compliant with [the spec](https://www.w3.org/TR/mediaqueries-5/) (see doc on [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) or [Other features](#other-features)).
 
 ![Node CI tests](https://github.com/Ayc0/mock-match-media/actions/workflows/main.yml/badge.svg)
 
-We currently support Node v12, v14, v16, v18 and v19.
+We currently requires at least Node v20.19.0 to be able to `require(ESM)`
 
 It's also coded in TypeScript.
 
@@ -45,7 +45,7 @@ setMedia({
 
 matchMedia("(min-width: 250px)").matches;
 // > false
-matchMedia("(min-width: 40px)").matches;
+matchMedia("(width > 40px)").matches;
 // > true
 
 // Only redefine what changed
@@ -53,7 +53,7 @@ setMedia({
     width: 500,
 });
 
-matchMedia("(min-width: 250px)").matches;
+matchMedia("(width > 250px)").matches;
 // > true
 ```
 
