@@ -40,7 +40,7 @@ setMedia({
     width: 50,
     type: "screen",
     orientation: "landscape",
-    "prefers-color-scheme": "light",
+    prefersColorScheme: "light",
 });
 
 matchMedia("(min-width: 250px)").matches;
