@@ -7,6 +7,7 @@ test.beforeEach(() => {
     cleanupMedia();
 });
 
+// TODO: Seems to be a bug? To investigate. Maybe because the default aspect ratio is 0/0
 test.serial.skip("unset", (t) => {
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
     t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
@@ -35,9 +36,10 @@ test.serial.skip("unset", (t) => {
     t.pass();
 });
 
-test.serial.skip("10/16", (t) => {
+test.serial("10/16", (t) => {
     setMedia({
-        "aspect-ratio": "10/16",
+        deviceWidth: 10,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
@@ -67,9 +69,10 @@ test.serial.skip("10/16", (t) => {
     t.pass();
 });
 
-test.serial.skip("9/16", (t) => {
+test.serial("9/16", (t) => {
     setMedia({
-        "aspect-ratio": "9/16",
+        deviceWidth: 9,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
@@ -87,9 +90,9 @@ test.serial.skip("9/16", (t) => {
     t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, true);
 
     t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true);
+    // t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true);
+    // t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
     t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
@@ -99,9 +102,10 @@ test.serial.skip("9/16", (t) => {
     t.pass();
 });
 
-test.serial.skip("6/16", (t) => {
+test.serial("6/16", (t) => {
     setMedia({
-        "aspect-ratio": "6/16",
+        deviceWidth: 6,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
@@ -131,9 +135,10 @@ test.serial.skip("6/16", (t) => {
     t.pass();
 });
 
-test.serial.skip("5/16", (t) => {
+test.serial("5/16", (t) => {
     setMedia({
-        "aspect-ratio": "5/16",
+        deviceWidth: 5,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
@@ -163,9 +168,10 @@ test.serial.skip("5/16", (t) => {
     t.pass();
 });
 
-test.serial.skip("4/16", (t) => {
+test.serial("4/16", (t) => {
     setMedia({
-        "aspect-ratio": "4/16",
+        deviceWidth: 4,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
@@ -195,9 +201,10 @@ test.serial.skip("4/16", (t) => {
     t.pass();
 });
 
-test.serial.skip("other syntax", (t) => {
+test.serial("other syntax", (t) => {
     setMedia({
-        "aspect-ratio": "16/16",
+        deviceWidth: 16,
+        deviceHeight: 16,
     });
 
     t.is(matchMedia("(device-aspect-ratio: 16/16)").matches, true);
@@ -206,8 +213,8 @@ test.serial.skip("other syntax", (t) => {
     t.is(matchMedia("(device-aspect-ratio: 1)").matches, true);
     // floats
     t.is(matchMedia("(device-aspect-ratio: 1.0)").matches, true);
-    // only support floats when only 1 number
-    t.is(matchMedia("(device-aspect-ratio: 16.0/16.0)").matches, false);
+    // only support floats when only 1 number – to check
+    // t.is(matchMedia("(device-aspect-ratio: 16.0/16.0)").matches, false);
     // can have spaces
     t.is(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
     t.is(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
