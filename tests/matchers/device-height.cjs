@@ -35,7 +35,7 @@ test.serial("unset", (t) => {
     t.pass();
 });
 
-test.serial("600px", (t) => {
+test.serial("deviceHeight 600px", (t) => {
     setMedia({
         deviceHeight: 600,
     });
@@ -67,7 +67,7 @@ test.serial("600px", (t) => {
     t.pass();
 });
 
-test.serial("500px", (t) => {
+test.serial("deviceHeight 500px", (t) => {
     setMedia({
         deviceHeight: 500,
     });
@@ -99,7 +99,7 @@ test.serial("500px", (t) => {
     t.pass();
 });
 
-test.serial("400px", (t) => {
+test.serial("deviceHeight 400px", (t) => {
     setMedia({
         deviceHeight: 400,
     });
@@ -131,7 +131,7 @@ test.serial("400px", (t) => {
     t.pass();
 });
 
-test.serial("300px", (t) => {
+test.serial("deviceHeight 300px", (t) => {
     setMedia({
         deviceHeight: 300,
     });
@@ -163,7 +163,7 @@ test.serial("300px", (t) => {
     t.pass();
 });
 
-test.serial("200px", (t) => {
+test.serial("deviceHeight 200px", (t) => {
     setMedia({
         deviceHeight: 200,
     });
@@ -191,6 +191,38 @@ test.serial("200px", (t) => {
     t.is(matchMedia("(300px <= device-height <= 500px)").matches, false);
     t.is(matchMedia("(300px < device-height <= 500px)").matches, false);
     t.is(matchMedia("(300px <= device-height < 500px)").matches, false);
+
+    t.pass();
+});
+
+test.serial("height & dppx", (t) => {
+    setMedia({
+        height: 600,
+    });
+
+    t.is(matchMedia("(device-height > 500px)").matches, true);
+    t.is(matchMedia("(device-height < 700px)").matches, true);
+    t.is(matchMedia("(device-height: 600px)").matches, true);
+
+    setMedia({
+        // Keep the: `height: 600`
+        dppx: 2,
+    });
+
+    t.is(matchMedia("(device-height > 500px)").matches, true);
+    t.is(matchMedia("(device-height < 700px)").matches, false);
+    t.is(matchMedia("(device-height: 600px)").matches, false);
+    t.is(matchMedia("(device-height: 1200px)").matches, true);
+
+    setMedia({
+        // Keep the `dppx: 2`
+        height: 300,
+    });
+
+    t.is(matchMedia("(device-height > 500px)").matches, true);
+    t.is(matchMedia("(device-height < 700px)").matches, true);
+    t.is(matchMedia("(device-height: 600px)").matches, true);
+    t.is(matchMedia("(device-height: 300px)").matches, false);
 
     t.pass();
 });

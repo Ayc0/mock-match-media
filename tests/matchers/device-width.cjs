@@ -35,7 +35,7 @@ test.serial("unset", (t) => {
     t.pass();
 });
 
-test.serial("600px", (t) => {
+test.serial("device 600px", (t) => {
     setMedia({
         deviceWidth: 600,
     });
@@ -67,7 +67,7 @@ test.serial("600px", (t) => {
     t.pass();
 });
 
-test.serial("500px", (t) => {
+test.serial("device 500px", (t) => {
     setMedia({
         deviceWidth: 500,
     });
@@ -99,7 +99,7 @@ test.serial("500px", (t) => {
     t.pass();
 });
 
-test.serial("400px", (t) => {
+test.serial("device 400px", (t) => {
     setMedia({
         deviceWidth: 400,
     });
@@ -131,7 +131,7 @@ test.serial("400px", (t) => {
     t.pass();
 });
 
-test.serial("300px", (t) => {
+test.serial("device 300px", (t) => {
     setMedia({
         deviceWidth: 300,
     });
@@ -163,7 +163,7 @@ test.serial("300px", (t) => {
     t.pass();
 });
 
-test.serial("200px", (t) => {
+test.serial("device 200px", (t) => {
     setMedia({
         deviceWidth: 200,
     });
@@ -191,6 +191,38 @@ test.serial("200px", (t) => {
     t.is(matchMedia("(300px <= device-width <= 500px)").matches, false);
     t.is(matchMedia("(300px < device-width <= 500px)").matches, false);
     t.is(matchMedia("(300px <= device-width < 500px)").matches, false);
+
+    t.pass();
+});
+
+test.serial("width & dppx", (t) => {
+    setMedia({
+        width: 600,
+    });
+
+    t.is(matchMedia("(device-width > 500px)").matches, true);
+    t.is(matchMedia("(device-width < 700px)").matches, true);
+    t.is(matchMedia("(device-width: 600px)").matches, true);
+
+    setMedia({
+        // Keep the: `width: 600`
+        dppx: 2,
+    });
+
+    t.is(matchMedia("(device-width > 500px)").matches, true);
+    t.is(matchMedia("(device-width < 700px)").matches, false);
+    t.is(matchMedia("(device-width: 600px)").matches, false);
+    t.is(matchMedia("(device-width: 1200px)").matches, true);
+
+    setMedia({
+        // Keep the `dppx: 2`
+        width: 300,
+    });
+
+    t.is(matchMedia("(device-width > 500px)").matches, true);
+    t.is(matchMedia("(device-width < 700px)").matches, true);
+    t.is(matchMedia("(device-width: 600px)").matches, true);
+    t.is(matchMedia("(device-width: 300px)").matches, false);
 
     t.pass();
 });
