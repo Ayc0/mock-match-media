@@ -27,7 +27,7 @@ const convertStateToEnv = (state: MediaState): Parameters<typeof matches>[1] => 
 
 let state: MediaState = {};
 
-type Feature = Exclude<keyof SimplePerm, "media-type">;
+type Feature = keyof MediaState;
 
 const now = Date.now();
 
@@ -202,6 +202,17 @@ export const setMedia = (media: MediaState) => {
         changedFeatures.add(feature as Feature);
         state[feature] = media[feature];
     });
+
+    // If we are trying to change the `width` but not the `deviceWidth`
+    if ((changedFeatures.has("width") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceWidth")) {
+        state.deviceWidth = (state.width ?? DEFAULT_ENV.widthPx) * (state.dppx ?? DEFAULT_ENV.dppx);
+        changedFeatures.add("deviceWidth");
+    }
+    // If we are trying to change the `height` but not the `deviceHeight`
+    if ((changedFeatures.has("height") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceHeight")) {
+        state.deviceHeight = (state.height ?? DEFAULT_ENV.heightPx) * (state.dppx ?? DEFAULT_ENV.dppx);
+        changedFeatures.add("deviceHeight");
+    }
 
     for (const [MQL, cache] of MQLs) {
         let found = false;
