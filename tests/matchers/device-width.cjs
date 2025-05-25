@@ -7,18 +7,18 @@ test.beforeEach(() => {
     cleanupMedia();
 });
 
-test.serial.skip("unset", (t) => {
+test.serial("unset", (t) => {
     t.is(matchMedia("(min-device-width: 500px)").matches, false);
     t.is(matchMedia("(device-width: 500px)").matches, false);
-    t.is(matchMedia("(max-device-width: 500px)").matches, false);
+    t.is(matchMedia("(max-device-width: 500px)").matches, true);
 
     t.is(matchMedia("(device-width > 500px)").matches, false);
     t.is(matchMedia("(device-width >= 500px)").matches, false);
-    t.is(matchMedia("(device-width < 500px)").matches, false);
-    t.is(matchMedia("(device-width <= 500px)").matches, false);
+    t.is(matchMedia("(device-width < 500px)").matches, true);
+    t.is(matchMedia("(device-width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > device-width)").matches, false);
-    t.is(matchMedia("(500px >= device-width)").matches, false);
+    t.is(matchMedia("(500px > device-width)").matches, true);
+    t.is(matchMedia("(500px >= device-width)").matches, true);
     t.is(matchMedia("(500px < device-width)").matches, false);
     t.is(matchMedia("(500px <= device-width)").matches, false);
 
@@ -35,9 +35,9 @@ test.serial.skip("unset", (t) => {
     t.pass();
 });
 
-test.serial.skip("600px", (t) => {
+test.serial("600px", (t) => {
     setMedia({
-        width: 600,
+        deviceWidth: 600,
     });
 
     t.is(matchMedia("(min-device-width: 500px)").matches, true);
@@ -67,9 +67,9 @@ test.serial.skip("600px", (t) => {
     t.pass();
 });
 
-test.serial.skip("500px", (t) => {
+test.serial("500px", (t) => {
     setMedia({
-        width: 500,
+        deviceWidth: 500,
     });
 
     t.is(matchMedia("(min-device-width: 500px)").matches, true);
@@ -87,9 +87,9 @@ test.serial.skip("500px", (t) => {
     t.is(matchMedia("(500px <= device-width)").matches, true);
 
     t.is(matchMedia("(500px > device-width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= device-width >= 300px)").matches, true);
+    // t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-width >= 300px)").matches, false);
-    t.is(matchMedia("(500px >= device-width > 300px)").matches, true);
+    // t.is(matchMedia("(500px >= device-width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(300px < device-width < 500px)").matches, false);
     t.is(matchMedia("(300px <= device-width <= 500px)").matches, true);
@@ -99,9 +99,9 @@ test.serial.skip("500px", (t) => {
     t.pass();
 });
 
-test.serial.skip("400px", (t) => {
+test.serial("400px", (t) => {
     setMedia({
-        width: 400,
+        deviceWidth: 400,
     });
 
     t.is(matchMedia("(min-device-width: 500px)").matches, false);
@@ -131,9 +131,9 @@ test.serial.skip("400px", (t) => {
     t.pass();
 });
 
-test.serial.skip("300px", (t) => {
+test.serial("300px", (t) => {
     setMedia({
-        width: 300,
+        deviceWidth: 300,
     });
 
     t.is(matchMedia("(min-device-width: 500px)").matches, false);
@@ -151,7 +151,7 @@ test.serial.skip("300px", (t) => {
     t.is(matchMedia("(500px <= device-width)").matches, false);
 
     t.is(matchMedia("(500px > device-width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= device-width >= 300px)").matches, true);
+    // t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-width >= 300px)").matches, true);
     t.is(matchMedia("(500px >= device-width > 300px)").matches, false);
 
@@ -163,9 +163,9 @@ test.serial.skip("300px", (t) => {
     t.pass();
 });
 
-test.serial.skip("200px", (t) => {
+test.serial("200px", (t) => {
     setMedia({
-        width: 200,
+        deviceWidth: 200,
     });
 
     t.is(matchMedia("(min-device-width: 500px)").matches, false);
