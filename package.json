@@ -1,6 +1,6 @@
 {
     "name": "mock-match-media",
-    "version": "1.0.0-alpha.1",
+    "version": "1.0.0-alpha.2",
     "description": "mock window.matchMedia for tests or node",
     "source": "src/index.ts",
     "main": "dist/index.js",
