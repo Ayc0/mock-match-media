@@ -87,9 +87,9 @@ test.serial("deviceHeight 500px", (t) => {
     t.is(matchMedia("(500px <= device-height)").matches, true);
 
     t.is(matchMedia("(500px > device-height > 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-height >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-height >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-height >= 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-height > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-height > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(300px < device-height < 500px)").matches, false);
     t.is(matchMedia("(300px <= device-height <= 500px)").matches, true);
@@ -118,7 +118,7 @@ test.serial("deviceHeight 400px", (t) => {
     t.is(matchMedia("(500px < device-height)").matches, false);
     t.is(matchMedia("(500px <= device-height)").matches, false);
 
-    // t.is(matchMedia("(500px > device-height > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px > device-height > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px >= device-height >= 300px)").matches, true);
     t.is(matchMedia("(500px > device-height >= 300px)").matches, true);
     t.is(matchMedia("(500px >= device-height > 300px)").matches, true);
@@ -151,7 +151,7 @@ test.serial("deviceHeight 300px", (t) => {
     t.is(matchMedia("(500px <= device-height)").matches, false);
 
     t.is(matchMedia("(500px > device-height > 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-height >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-height >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-height >= 300px)").matches, true);
     t.is(matchMedia("(500px >= device-height > 300px)").matches, false);
 

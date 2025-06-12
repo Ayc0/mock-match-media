@@ -90,9 +90,9 @@ test.serial("9/16", (t) => {
     t.is(matchMedia("(9/16 <= aspect-ratio)").matches, true);
 
     t.is(matchMedia("(9/16 > aspect-ratio > 5/16)").matches, false);
-    // t.is(matchMedia("(9/16 >= aspect-ratio >= 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(9/16 >= aspect-ratio >= 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(9/16 > aspect-ratio >= 5/16)").matches, false);
-    // t.is(matchMedia("(9/16 >= aspect-ratio > 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(9/16 >= aspect-ratio > 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(5/16 < aspect-ratio < 9/16)").matches, false);
     t.is(matchMedia("(5/16 <= aspect-ratio <= 9/16)").matches, true);
@@ -214,7 +214,7 @@ test.serial("other syntax", (t) => {
     // floats
     t.is(matchMedia("(aspect-ratio: 1.0)").matches, true);
     // only support floats when only 1 number – TO CHECK
-    // t.is(matchMedia("(aspect-ratio: 16.0/16.0)").matches, true);
+    t.is(matchMedia("(aspect-ratio: 16.0/16.0)").matches, true);
     // can have spaces
     t.is(matchMedia("(aspect-ratio: 16/ 16)").matches, true);
     t.is(matchMedia("(aspect-ratio: 16 /16)").matches, true);

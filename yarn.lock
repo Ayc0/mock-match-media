@@ -2931,10 +2931,10 @@ mdn-data@2.0.14:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
-media-query-fns@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/media-query-fns/-/media-query-fns-2.0.0.tgz#50adbd466eb7885c5b50401205ee468489c30b82"
-  integrity sha512-HAIvh3utK+RMkNT/3Cc3fZuA2WJj4nISBHcmcXuSBaosB3slwl/iVjO/coroelDjOgKFgpe4oAoy7OO2sCgDog==
+media-query-fns@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/media-query-fns/-/media-query-fns-2.1.0.tgz#2857bf4d32201d5bdaecc6846d5744362f091129"
+  integrity sha512-vzk9X+zw0w+mMmjbkyeHBBhC5ZGjVX5mQht04d83hGJSzW2y8/QIRkgtq7HQYd4G8MyCGzzlUwOdrznGl4Gs+w==
   dependencies:
     media-query-parser "3.0.0-beta.1"
 

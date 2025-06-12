@@ -87,9 +87,9 @@ test.serial("device 500px", (t) => {
     t.is(matchMedia("(500px <= device-width)").matches, true);
 
     t.is(matchMedia("(500px > device-width > 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-width >= 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(300px < device-width < 500px)").matches, false);
     t.is(matchMedia("(300px <= device-width <= 500px)").matches, true);
@@ -151,7 +151,7 @@ test.serial("device 300px", (t) => {
     t.is(matchMedia("(500px <= device-width)").matches, false);
 
     t.is(matchMedia("(500px > device-width > 300px)").matches, false);
-    // t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= device-width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > device-width >= 300px)").matches, true);
     t.is(matchMedia("(500px >= device-width > 300px)").matches, false);
 
