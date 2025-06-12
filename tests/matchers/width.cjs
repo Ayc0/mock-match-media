@@ -87,9 +87,9 @@ test.serial("500px", (t) => {
     t.is(matchMedia("(500px <= width)").matches, true);
 
     t.is(matchMedia("(500px > width > 300px)").matches, false);
-    // t.is(matchMedia("(500px >= width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
     t.is(matchMedia("(500px > width >= 300px)").matches, false);
-    // t.is(matchMedia("(500px >= width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    t.is(matchMedia("(500px >= width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
     t.is(matchMedia("(300px < width < 500px)").matches, false);
     t.is(matchMedia("(300px <= width <= 500px)").matches, true);
