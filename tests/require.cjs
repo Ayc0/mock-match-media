@@ -1,6 +1,6 @@
 // @ts-check
 
-const test = require("ava");
+const test = require("ava").default;
 
 test.serial("can import mock-match-media from CJS", (t) => {
     const exportsDefault = require("mock-match-media");

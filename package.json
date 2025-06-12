@@ -44,7 +44,7 @@
         "media-query-fns": "^2.1.0"
     },
     "devDependencies": {
-        "ava": "^6.3.0",
+        "ava": "^6.4.0",
         "microbundle": "^0.15.1",
         "mock-match-media": "link:."
     }
