@@ -37,7 +37,8 @@
     ],
     "scripts": {
         "build": "rm -rf dist && microbundle --target node -f esm,cjs",
-        "test": "node --test",
+        "//": "--test-reporter spec is just here for node 20 & 22 for CI. Starting from Node 23, this is the default",
+        "test": "node --test --test-reporter spec",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
