@@ -37,7 +37,7 @@
     ],
     "scripts": {
         "build": "rm -rf dist && microbundle --target node -f esm,cjs",
-        "test": "node --test tests/**.{cjs,mjs}",
+        "test": "node --test $(find tests -name '*.cjs' -o -name '*.mjs')",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
