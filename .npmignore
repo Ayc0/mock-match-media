@@ -10,3 +10,5 @@ test/
 .*_cache_*/
 
 .prettierrc
+
+package-lock.json
