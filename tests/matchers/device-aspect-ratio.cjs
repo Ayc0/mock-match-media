@@ -1,6 +1,7 @@
 // @ts-check
 
-const test = require("ava").default;
+const { test } = require("node:test");
+const { strict: assert } = require("node:assert");
 const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
 
 test.beforeEach(() => {
@@ -8,217 +9,203 @@ test.beforeEach(() => {
 });
 
 // TODO: Seems to be a bug? To investigate. Maybe because the default aspect ratio is 0/0
-test.serial.skip("unset", (t) => {
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, false);
+test.skip("unset", () => {
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, false);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
 });
 
-test.serial("10/16", (t) => {
+test("10/16", () => {
     setMedia({
         deviceWidth: 10,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, false);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
 });
 
-test.serial("9/16", (t) => {
+test("9/16", () => {
     setMedia({
         deviceWidth: 9,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, true);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, true);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
 });
 
-test.serial("6/16", (t) => {
+test("6/16", () => {
     setMedia({
         deviceWidth: 6,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true);
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, true);
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, true);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, true);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, true);
 });
 
-test.serial("5/16", (t) => {
+test("5/16", () => {
     setMedia({
         deviceWidth: 5,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true);
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, true);
 });
 
-test.serial("4/16", (t) => {
+test("4/16", () => {
     setMedia({
         deviceWidth: 4,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
-    t.is(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
+    assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
+    assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, true);
 
-    t.is(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
-    t.is(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio > 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio >= 9/16)").matches, false);
+    assert.equal(matchMedia("(device-aspect-ratio < 9/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio <= 9/16)").matches, true);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
-    t.is(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
-    t.is(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio)").matches, true);
+    assert.equal(matchMedia("(9/16 < device-aspect-ratio)").matches, false);
+    assert.equal(matchMedia("(9/16 <= device-aspect-ratio)").matches, false);
 
-    t.is(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
-    t.is(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio > 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 > device-aspect-ratio >= 5/16)").matches, false);
+    assert.equal(matchMedia("(9/16 >= device-aspect-ratio > 5/16)").matches, false);
 
-    t.is(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
-    t.is(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio < 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 < device-aspect-ratio <= 9/16)").matches, false);
+    assert.equal(matchMedia("(5/16 <= device-aspect-ratio < 9/16)").matches, false);
 });
 
-test.serial("other syntax", (t) => {
+test("other syntax", () => {
     setMedia({
         deviceWidth: 16,
         deviceHeight: 16,
     });
 
-    t.is(matchMedia("(device-aspect-ratio: 16/16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio: 8/8)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 16/16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 8/8)").matches, true);
     // optional second denominator
-    t.is(matchMedia("(device-aspect-ratio: 1)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 1)").matches, true);
     // floats
-    t.is(matchMedia("(device-aspect-ratio: 1.0)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 1.0)").matches, true);
     // only support floats when only 1 number – to check
-    t.is(matchMedia("(device-aspect-ratio: 16.0/16.0)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 16.0/16.0)").matches, true);
     // can have spaces
-    t.is(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
-    t.is(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
+    assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
 });

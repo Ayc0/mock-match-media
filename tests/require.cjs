@@ -1,10 +1,11 @@
 // @ts-check
 
-const test = require("ava").default;
+const { test } = require("node:test");
+const { strict: assert } = require("node:assert");
 
-test.serial("can import mock-match-media from CJS", (t) => {
+test("can import mock-match-media from CJS", () => {
     const exportsDefault = require("mock-match-media");
-    t.deepEqual(Object.keys(exportsDefault), [
+    assert.deepEqual(Object.keys(exportsDefault), [
         "MediaQueryListEvent",
         "cleanup",
         "cleanupListeners",
@@ -12,29 +13,26 @@ test.serial("can import mock-match-media from CJS", (t) => {
         "matchMedia",
         "setMedia",
     ]);
-    t.pass();
 });
 
-test.serial("can import mock-match-media/polyfill from CJS", (t) => {
-    t.is(global.matchMedia, undefined);
-    t.is(global.MediaQueryListEvent, undefined);
+test("can import mock-match-media/polyfill from CJS", () => {
+    assert.equal(global.matchMedia, undefined);
+    assert.equal(global.MediaQueryListEvent, undefined);
     const { matchMedia, MediaQueryListEvent } = require("mock-match-media");
     require("mock-match-media/polyfill");
-    t.is(global.matchMedia, matchMedia);
-    t.is(global.MediaQueryListEvent, MediaQueryListEvent);
+    assert.equal(global.matchMedia, matchMedia);
+    assert.equal(global.MediaQueryListEvent, MediaQueryListEvent);
     delete require.cache[require.resolve("mock-match-media/polyfill")];
     // @ts-expect-error
     delete global.matchMedia;
-    t.pass();
 });
 
-test.serial("can import mock-match-media/jest-setup from CJS", (t) => {
-    t.is(global.matchMedia, undefined);
+test("can import mock-match-media/jest-setup from CJS", () => {
+    assert.equal(global.matchMedia, undefined);
     const { matchMedia } = require("mock-match-media");
     require("mock-match-media/jest-setup");
-    t.is(global.matchMedia, matchMedia);
+    assert.equal(global.matchMedia, matchMedia);
     delete require.cache[require.resolve("mock-match-media/jest-setup")];
     // @ts-expect-error
     delete global.matchMedia;
-    t.pass();
 });

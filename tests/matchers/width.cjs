@@ -1,196 +1,185 @@
 // @ts-check
 
-const test = require("ava").default;
+const { test } = require("node:test");
+const { strict: assert } = require("node:assert");
 const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
 
 test.beforeEach(() => {
     cleanupMedia();
 });
 
-test.serial("unset", (t) => {
-    t.is(matchMedia("(min-width: 500px)").matches, false);
-    t.is(matchMedia("(width: 500px)").matches, false);
-    t.is(matchMedia("(max-width: 500px)").matches, true);
+test("unset", () => {
+    assert.equal(matchMedia("(min-width: 500px)").matches, false);
+    assert.equal(matchMedia("(width: 500px)").matches, false);
+    assert.equal(matchMedia("(max-width: 500px)").matches, true);
 
-    t.is(matchMedia("(width > 500px)").matches, false);
-    t.is(matchMedia("(width >= 500px)").matches, false);
-    t.is(matchMedia("(width < 500px)").matches, true);
-    t.is(matchMedia("(width <= 500px)").matches, true);
+    assert.equal(matchMedia("(width > 500px)").matches, false);
+    assert.equal(matchMedia("(width >= 500px)").matches, false);
+    assert.equal(matchMedia("(width < 500px)").matches, true);
+    assert.equal(matchMedia("(width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > width)").matches, true);
-    t.is(matchMedia("(500px >= width)").matches, true);
-    t.is(matchMedia("(500px < width)").matches, false);
-    t.is(matchMedia("(500px <= width)").matches, false);
+    assert.equal(matchMedia("(500px > width)").matches, true);
+    assert.equal(matchMedia("(500px >= width)").matches, true);
+    assert.equal(matchMedia("(500px < width)").matches, false);
+    assert.equal(matchMedia("(500px <= width)").matches, false);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, false);
-    t.is(matchMedia("(500px > width >= 300px)").matches, false);
-    t.is(matchMedia("(500px >= width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, false);
 
-    t.is(matchMedia("(300px < width < 500px)").matches, false);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, false);
-    t.is(matchMedia("(300px < width <= 500px)").matches, false);
-    t.is(matchMedia("(300px <= width < 500px)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, false);
 });
 
-test.serial("600px", (t) => {
+test("600px", () => {
     setMedia({
         width: 600,
     });
 
-    t.is(matchMedia("(min-width: 500px)").matches, true);
-    t.is(matchMedia("(width: 500px)").matches, false);
-    t.is(matchMedia("(max-width: 500px)").matches, false);
+    assert.equal(matchMedia("(min-width: 500px)").matches, true);
+    assert.equal(matchMedia("(width: 500px)").matches, false);
+    assert.equal(matchMedia("(max-width: 500px)").matches, false);
 
-    t.is(matchMedia("(width > 500px)").matches, true);
-    t.is(matchMedia("(width >= 500px)").matches, true);
-    t.is(matchMedia("(width < 500px)").matches, false);
-    t.is(matchMedia("(width <= 500px)").matches, false);
+    assert.equal(matchMedia("(width > 500px)").matches, true);
+    assert.equal(matchMedia("(width >= 500px)").matches, true);
+    assert.equal(matchMedia("(width < 500px)").matches, false);
+    assert.equal(matchMedia("(width <= 500px)").matches, false);
 
-    t.is(matchMedia("(500px > width)").matches, false);
-    t.is(matchMedia("(500px >= width)").matches, false);
-    t.is(matchMedia("(500px < width)").matches, true);
-    t.is(matchMedia("(500px <= width)").matches, true);
+    assert.equal(matchMedia("(500px > width)").matches, false);
+    assert.equal(matchMedia("(500px >= width)").matches, false);
+    assert.equal(matchMedia("(500px < width)").matches, true);
+    assert.equal(matchMedia("(500px <= width)").matches, true);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, false);
-    t.is(matchMedia("(500px > width >= 300px)").matches, false);
-    t.is(matchMedia("(500px >= width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, false);
 
-    t.is(matchMedia("(300px < width < 500px)").matches, false);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, false);
-    t.is(matchMedia("(300px < width <= 500px)").matches, false);
-    t.is(matchMedia("(300px <= width < 500px)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, false);
 });
 
-test.serial("500px", (t) => {
+test("500px", () => {
     setMedia({
         width: 500,
     });
 
-    t.is(matchMedia("(min-width: 500px)").matches, true);
-    t.is(matchMedia("(width: 500px)").matches, true);
-    t.is(matchMedia("(max-width: 500px)").matches, true);
+    assert.equal(matchMedia("(min-width: 500px)").matches, true);
+    assert.equal(matchMedia("(width: 500px)").matches, true);
+    assert.equal(matchMedia("(max-width: 500px)").matches, true);
 
-    t.is(matchMedia("(width > 500px)").matches, false);
-    t.is(matchMedia("(width >= 500px)").matches, true);
-    t.is(matchMedia("(width < 500px)").matches, false);
-    t.is(matchMedia("(width <= 500px)").matches, true);
+    assert.equal(matchMedia("(width > 500px)").matches, false);
+    assert.equal(matchMedia("(width >= 500px)").matches, true);
+    assert.equal(matchMedia("(width < 500px)").matches, false);
+    assert.equal(matchMedia("(width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > width)").matches, false);
-    t.is(matchMedia("(500px >= width)").matches, true);
-    t.is(matchMedia("(500px < width)").matches, false);
-    t.is(matchMedia("(500px <= width)").matches, true);
+    assert.equal(matchMedia("(500px > width)").matches, false);
+    assert.equal(matchMedia("(500px >= width)").matches, true);
+    assert.equal(matchMedia("(500px < width)").matches, false);
+    assert.equal(matchMedia("(500px <= width)").matches, true);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
-    t.is(matchMedia("(500px > width >= 300px)").matches, false);
-    t.is(matchMedia("(500px >= width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    assert.equal(matchMedia("(500px > width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, true); // Bug in media-query-fns https://github.com/tbjgolden/media-query-fns/issues/7
 
-    t.is(matchMedia("(300px < width < 500px)").matches, false);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, true);
-    t.is(matchMedia("(300px < width <= 500px)").matches, true);
-    t.is(matchMedia("(300px <= width < 500px)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, true);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, true);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, false);
 });
 
-test.serial("400px", (t) => {
+test("400px", () => {
     setMedia({
         width: 400,
     });
 
-    t.is(matchMedia("(min-width: 500px)").matches, false);
-    t.is(matchMedia("(width: 500px)").matches, false);
-    t.is(matchMedia("(max-width: 500px)").matches, true);
+    assert.equal(matchMedia("(min-width: 500px)").matches, false);
+    assert.equal(matchMedia("(width: 500px)").matches, false);
+    assert.equal(matchMedia("(max-width: 500px)").matches, true);
 
-    t.is(matchMedia("(width > 500px)").matches, false);
-    t.is(matchMedia("(width >= 500px)").matches, false);
-    t.is(matchMedia("(width < 500px)").matches, true);
-    t.is(matchMedia("(width <= 500px)").matches, true);
+    assert.equal(matchMedia("(width > 500px)").matches, false);
+    assert.equal(matchMedia("(width >= 500px)").matches, false);
+    assert.equal(matchMedia("(width < 500px)").matches, true);
+    assert.equal(matchMedia("(width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > width)").matches, true);
-    t.is(matchMedia("(500px >= width)").matches, true);
-    t.is(matchMedia("(500px < width)").matches, false);
-    t.is(matchMedia("(500px <= width)").matches, false);
+    assert.equal(matchMedia("(500px > width)").matches, true);
+    assert.equal(matchMedia("(500px >= width)").matches, true);
+    assert.equal(matchMedia("(500px < width)").matches, false);
+    assert.equal(matchMedia("(500px <= width)").matches, false);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, true);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, true);
-    t.is(matchMedia("(500px > width >= 300px)").matches, true);
-    t.is(matchMedia("(500px >= width > 300px)").matches, true);
+    assert.equal(matchMedia("(500px > width > 300px)").matches, true);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, true);
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, true);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, true);
 
-    t.is(matchMedia("(300px < width < 500px)").matches, true);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, true);
-    t.is(matchMedia("(300px < width <= 500px)").matches, true);
-    t.is(matchMedia("(300px <= width < 500px)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, true);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, true);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, true);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, true);
 });
 
-test.serial("300px", (t) => {
+test("300px", () => {
     setMedia({
         width: 300,
     });
 
-    t.is(matchMedia("(min-width: 500px)").matches, false);
-    t.is(matchMedia("(width: 500px)").matches, false);
-    t.is(matchMedia("(max-width: 500px)").matches, true);
+    assert.equal(matchMedia("(min-width: 500px)").matches, false);
+    assert.equal(matchMedia("(width: 500px)").matches, false);
+    assert.equal(matchMedia("(max-width: 500px)").matches, true);
 
-    t.is(matchMedia("(width > 500px)").matches, false);
-    t.is(matchMedia("(width >= 500px)").matches, false);
-    t.is(matchMedia("(width < 500px)").matches, true);
-    t.is(matchMedia("(width <= 500px)").matches, true);
+    assert.equal(matchMedia("(width > 500px)").matches, false);
+    assert.equal(matchMedia("(width >= 500px)").matches, false);
+    assert.equal(matchMedia("(width < 500px)").matches, true);
+    assert.equal(matchMedia("(width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > width)").matches, true);
-    t.is(matchMedia("(500px >= width)").matches, true);
-    t.is(matchMedia("(500px < width)").matches, false);
-    t.is(matchMedia("(500px <= width)").matches, false);
+    assert.equal(matchMedia("(500px > width)").matches, true);
+    assert.equal(matchMedia("(500px >= width)").matches, true);
+    assert.equal(matchMedia("(500px < width)").matches, false);
+    assert.equal(matchMedia("(500px <= width)").matches, false);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, true);
-    t.is(matchMedia("(500px > width >= 300px)").matches, true);
-    t.is(matchMedia("(500px >= width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, true);
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, true);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, false);
 
-    t.is(matchMedia("(300px < width < 500px)").matches, false);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, true);
-    t.is(matchMedia("(300px < width <= 500px)").matches, false);
-    t.is(matchMedia("(300px <= width < 500px)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, true);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, true);
 });
 
-test.serial("200px", (t) => {
+test("200px", () => {
     setMedia({
         width: 200,
     });
 
-    t.is(matchMedia("(min-width: 500px)").matches, false);
-    t.is(matchMedia("(width: 500px)").matches, false);
-    t.is(matchMedia("(max-width: 500px)").matches, true);
+    assert.equal(matchMedia("(min-width: 500px)").matches, false);
+    assert.equal(matchMedia("(width: 500px)").matches, false);
+    assert.equal(matchMedia("(max-width: 500px)").matches, true);
 
-    t.is(matchMedia("(width > 500px)").matches, false);
-    t.is(matchMedia("(width >= 500px)").matches, false);
-    t.is(matchMedia("(width < 500px)").matches, true);
-    t.is(matchMedia("(width <= 500px)").matches, true);
+    assert.equal(matchMedia("(width > 500px)").matches, false);
+    assert.equal(matchMedia("(width >= 500px)").matches, false);
+    assert.equal(matchMedia("(width < 500px)").matches, true);
+    assert.equal(matchMedia("(width <= 500px)").matches, true);
 
-    t.is(matchMedia("(500px > width)").matches, true);
-    t.is(matchMedia("(500px >= width)").matches, true);
-    t.is(matchMedia("(500px < width)").matches, false);
-    t.is(matchMedia("(500px <= width)").matches, false);
+    assert.equal(matchMedia("(500px > width)").matches, true);
+    assert.equal(matchMedia("(500px >= width)").matches, true);
+    assert.equal(matchMedia("(500px < width)").matches, false);
+    assert.equal(matchMedia("(500px <= width)").matches, false);
 
-    t.is(matchMedia("(500px > width > 300px)").matches, false);
-    t.is(matchMedia("(500px >= width >= 300px)").matches, false);
-    t.is(matchMedia("(500px > width >= 300px)").matches, false);
-    t.is(matchMedia("(500px >= width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width > 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px > width >= 300px)").matches, false);
+    assert.equal(matchMedia("(500px >= width > 300px)").matches, false);
 
-    t.is(matchMedia("(300px < width < 500px)").matches, false);
-    t.is(matchMedia("(300px <= width <= 500px)").matches, false);
-    t.is(matchMedia("(300px < width <= 500px)").matches, false);
-    t.is(matchMedia("(300px <= width < 500px)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(300px < width < 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px < width <= 500px)").matches, false);
+    assert.equal(matchMedia("(300px <= width < 500px)").matches, false);
 });

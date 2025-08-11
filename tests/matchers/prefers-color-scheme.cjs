@@ -1,37 +1,32 @@
 // @ts-check
 
-const test = require("ava").default;
+const { test } = require("node:test");
+const { strict: assert } = require("node:assert");
 const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
 
 test.beforeEach(() => {
     cleanupMedia();
 });
 
-test.serial("unset", (t) => {
-    t.is(matchMedia("(prefers-color-scheme: light)").matches, false);
-    t.is(matchMedia("(prefers-color-scheme: dark)").matches, false);
-
-    t.pass();
+test("unset", () => {
+    assert.equal(matchMedia("(prefers-color-scheme: light)").matches, false);
+    assert.equal(matchMedia("(prefers-color-scheme: dark)").matches, false);
 });
 
-test.serial("light", (t) => {
+test("light", () => {
     setMedia({
         prefersColorScheme: "light",
     });
 
-    t.is(matchMedia("(prefers-color-scheme: light)").matches, true);
-    t.is(matchMedia("(prefers-color-scheme: dark)").matches, false);
-
-    t.pass();
+    assert.equal(matchMedia("(prefers-color-scheme: light)").matches, true);
+    assert.equal(matchMedia("(prefers-color-scheme: dark)").matches, false);
 });
 
-test.serial("dark", (t) => {
+test("dark", () => {
     setMedia({
         prefersColorScheme: "dark",
     });
 
-    t.is(matchMedia("(prefers-color-scheme: light)").matches, false);
-    t.is(matchMedia("(prefers-color-scheme: dark)").matches, true);
-
-    t.pass();
+    assert.equal(matchMedia("(prefers-color-scheme: light)").matches, false);
+    assert.equal(matchMedia("(prefers-color-scheme: dark)").matches, true);
 });

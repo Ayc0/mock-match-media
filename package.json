@@ -37,14 +37,13 @@
     ],
     "scripts": {
         "build": "rm -rf dist && microbundle --target node -f esm,cjs",
-        "test": "ava",
+        "test": "node --test \"tests/**.{cjs,mjs}\"",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
         "media-query-fns": "^2.1.0"
     },
     "devDependencies": {
-        "ava": "^6.4.0",
         "microbundle": "^0.15.1",
         "mock-match-media": "link:."
     }

@@ -1,48 +1,47 @@
 // @ts-check
 
-const test = require("ava").default;
+const { test } = require("node:test");
+const { strict: assert } = require("node:assert");
 const { matchMedia, setMedia, cleanupListeners, cleanupMedia, cleanup } = require("mock-match-media");
 
-test.serial(".matches", (t) => {
+test(".matches", () => {
     const mql = matchMedia("(min-width: 500px)");
 
-    t.is(mql.matches, false);
+    assert.equal(mql.matches, false);
 
     setMedia({
         width: 600,
     });
 
-    t.is(mql.matches, true);
+    assert.equal(mql.matches, true);
 
     setMedia({
         width: 300,
     });
 
-    t.is(mql.matches, false);
-
-    t.pass();
+    assert.equal(mql.matches, false);
 });
 
-test.serial("cleanupMedia", (t) => {
+test("cleanupMedia", () => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
     setMedia({
         width: 600,
     });
-    t.is(doesMatch(), true);
+    assert.equal(doesMatch(), true);
 
     cleanupMedia();
-    t.is(doesMatch(), false);
+    assert.equal(doesMatch(), false);
 });
 
-test.serial("cleanup", (t) => {
+test("cleanup", () => {
     const doesMatch = () => matchMedia("(min-width: 500px)").matches;
 
     setMedia({
         width: 600,
     });
-    t.is(doesMatch(), true);
+    assert.equal(doesMatch(), true);
 
     cleanup();
-    t.is(doesMatch(), false);
+    assert.equal(doesMatch(), false);
 });

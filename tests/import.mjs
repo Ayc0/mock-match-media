@@ -1,10 +1,11 @@
 // @ts-check
 
-import test from "ava";
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
 
-test.serial("can import mock-match-media from ESM", async (t) => {
+test("can import mock-match-media from ESM", async () => {
     const exportsDefault = await import("mock-match-media");
-    t.deepEqual(Object.keys(exportsDefault), [
+    assert.deepEqual(Object.keys(exportsDefault), [
         "MediaQueryListEvent",
         "cleanup",
         "cleanupListeners",
@@ -12,15 +13,13 @@ test.serial("can import mock-match-media from ESM", async (t) => {
         "matchMedia",
         "setMedia",
     ]);
-    t.pass();
 });
 
-test.serial("can import mock-match-media/polyfill from ESM", async (t) => {
-    t.is(global.matchMedia, undefined);
+test("can import mock-match-media/polyfill from ESM", async () => {
+    assert.equal(global.matchMedia, undefined);
     const { matchMedia } = await import("mock-match-media");
 
     await import("mock-match-media/polyfill");
 
-    t.is(global.matchMedia, matchMedia);
-    t.pass();
+    assert.equal(global.matchMedia, matchMedia);
 });
