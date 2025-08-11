@@ -37,14 +37,14 @@
     ],
     "scripts": {
         "build": "rm -rf dist && microbundle --target node -f esm,cjs",
-        "test": "ava",
+        "//": "--test-reporter spec is just here for node 20 & 22 for CI. Starting from Node 23, this is the default",
+        "test": "node --test --test-reporter spec",
         "prepublishOnly": "yarn build"
     },
     "dependencies": {
         "media-query-fns": "^2.1.0"
     },
     "devDependencies": {
-        "ava": "^6.4.0",
         "microbundle": "^0.15.1",
         "mock-match-media": "link:."
     }
