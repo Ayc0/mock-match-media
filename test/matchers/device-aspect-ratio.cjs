@@ -8,8 +8,7 @@ test.beforeEach(() => {
     cleanupMedia();
 });
 
-// TODO: Seems to be a bug? To investigate. Maybe because the default aspect ratio is 0/0
-test.skip("unset", () => {
+test("unset", () => {
     assert.equal(matchMedia("(min-device-aspect-ratio: 9/16)").matches, false);
     assert.equal(matchMedia("(device-aspect-ratio: 9/16)").matches, false);
     assert.equal(matchMedia("(max-device-aspect-ratio: 9/16)").matches, false);
