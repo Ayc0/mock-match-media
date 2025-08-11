@@ -2,7 +2,7 @@ node_modules/
 .DS_Store
 
 src/
-tests/
+test/
 .github/
 .vscode/
 
