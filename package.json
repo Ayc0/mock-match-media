@@ -42,7 +42,7 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "media-query-fns": "^2.1.0"
+        "media-query-fns": "^2.1.2"
     },
     "devDependencies": {
         "microbundle": "^0.15.1"
