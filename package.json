@@ -2,28 +2,6 @@
     "name": "mock-match-media",
     "version": "1.0.0-alpha.3",
     "description": "mock window.matchMedia for tests or node",
-    "source": "src/index.ts",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "require": "./dist/index.js",
-            "import": "./dist/index.mjs",
-            "browser": "./dist/index.mjs"
-        },
-        "./package.json": "./package.json",
-        "./polyfill": {
-            "types": "./polyfill.d.ts",
-            "require": "./polyfill.js",
-            "import": "./polyfill.mjs"
-        },
-        "./jest-setup": {
-            "types": "./jest-setup.d.ts",
-            "require": "./jest-setup.cjs"
-        }
-    },
     "repository": "git@github.com:Ayc0/mock-match-media.git",
     "author": "Ayc0 <ayc0.benj@gmail.com>",
     "license": "MIT",
@@ -37,8 +15,26 @@
         "ssr",
         "server-side-rendering"
     ],
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs",
+            "browser": "./dist/index.mjs"
+        },
+        "./package.json": "./package.json",
+        "./polyfill": {
+            "types": "./polyfill.d.ts",
+            "require": "./polyfill.cjs",
+            "import": "./polyfill.mjs"
+        },
+        "./jest-setup": {
+            "types": "./jest-setup.d.ts",
+            "require": "./jest-setup.cjs"
+        }
+    },
     "scripts": {
-        "build": "rm -rf dist && microbundle --target node -f esm,cjs",
+        "build": "rm -rf dist && tsdown --format esm --format cjs",
         "//": "--test-reporter spec is just here for node 20 & 22 for CI. Starting from Node 23, this is the default",
         "test": "node --test --test-reporter spec",
         "prepublishOnly": "npm run build"
@@ -47,6 +43,7 @@
         "media-query-fns": "^2.1.2"
     },
     "devDependencies": {
-        "microbundle": "^0.15.1"
+        "tsdown": "^0.14.2",
+        "typescript": "^5.9.2"
     }
 }
