@@ -15,10 +15,12 @@
         },
         "./package.json": "./package.json",
         "./polyfill": {
+            "types": "./polyfill.d.ts",
             "require": "./polyfill.js",
             "import": "./polyfill.mjs"
         },
         "./jest-setup": {
+            "types": "./jest-setup.d.ts",
             "require": "./jest-setup.cjs"
         }
     },
