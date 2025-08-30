@@ -10,15 +10,19 @@ const DEFAULT_ENV: Parameters<typeof matches>[1] = {
     dppx: 1,
 };
 
+type PixelFeature = "width" | "height" | "deviceWidth" | "deviceHeight";
 const PIXEL_FEATURES = ["width", "height", "deviceWidth", "deviceHeight"];
+
+const isPixelFeature = (key: string): key is PixelFeature => PIXEL_FEATURES.includes(key);
+
 const convertStateToEnv = (state: MediaState): Parameters<typeof matches>[1] => {
     const env = { ...DEFAULT_ENV };
 
     for (const [key, value] of Object.entries(state)) {
-        if (PIXEL_FEATURES.includes(key)) {
-            env[key + "Px"] = value;
+        if (isPixelFeature(key)) {
+            env[`${key}Px`] = value as number;
         } else {
-            env[key] = value;
+            (env[key as Exclude<Feature, PixelFeature>] as any) = value;
         }
     }
 
@@ -109,7 +113,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
         },
         media: query,
         onchange: null,
-        addEventListener: (event, callback, options) => {
+        addEventListener: (event: string, callback: EventListener, options?: boolean | AddEventListenerOptions) => {
             if (event === "change" && callback) {
                 const isAlreadyListed = callbacks.has(callback);
                 callbacks.add(callback);
@@ -132,7 +136,7 @@ export const matchMedia: typeof window.matchMedia = (query: string) => {
                 onces.add(callback);
             }
         },
-        removeEventListener: (event, callback) => {
+        removeEventListener: (event: string, callback: EventListener) => {
             if (event === "change") removeListener(callback);
         },
         dispatchEvent: (event: MediaQueryListEvent) => {
@@ -196,11 +200,11 @@ export class MediaQueryListEvent extends EventCompat {
 }
 
 // Cannot use MediaState here as setMedia is exposed in the API
-export const setMedia = (media: MediaState) => {
+export const setMedia = (media: MediaState): void => {
     const changedFeatures = new Set<Feature>();
     Object.keys(media).forEach((feature) => {
         changedFeatures.add(feature as Feature);
-        state[feature] = media[feature];
+        (state[feature as Feature] as any) = media[feature as Feature];
     });
 
     // If we are trying to change the `width` but not the `deviceWidth`

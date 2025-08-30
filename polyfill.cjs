@@ -1,4 +1,4 @@
-import * as mmm from "./dist/index.mjs";
+const mmm = require("./dist/index.js");
 
 function inject(variable) {
     // Older versions of node don't have `globalThis` (but as it was added in node 12 and we don't target those versions, no need to have fallbacks)
