@@ -45,5 +45,9 @@
     "devDependencies": {
         "tsdown": "^0.14.2",
         "typescript": "^5.9.2"
+    },
+    "optionalDependencies": {
+        "@rolldown/binding-darwin-arm64": "^1.0.0-beta.34",
+        "@rolldown/binding-linux-x64-gnu": "^1.0.0-beta.34"
     }
 }
