@@ -1,6 +1,6 @@
-const { cleanup } = require("./");
+const { cleanup } = require("./dist/index.js");
 
-require("./polyfill");
+require("./polyfill.cjs");
 
 if (typeof process === "undefined") {
     if (typeof afterEach === "function") {
