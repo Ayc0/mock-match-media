@@ -18,10 +18,6 @@
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
-    "os": [
-        "linux",
-        "darwin"
-    ],
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -46,6 +42,11 @@
         "test": "node --test --test-reporter spec",
         "prepublishOnly": "npm run build"
     },
+    "volta": {
+        "node": "24.6.0",
+        "pnpm": "10.15.0"
+    },
+    "packageManager": "pnpm@10.15.0",
     "devDependencies": {
         "media-query-fns": "^2.1.2",
         "tsdown": "^0.14.2",
