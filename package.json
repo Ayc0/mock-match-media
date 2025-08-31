@@ -40,8 +40,13 @@
         "build": "rm -rf dist && tsdown --format esm --format cjs",
         "//": "--test-reporter spec is just here for node 20 & 22 for CI. Starting from Node 23, this is the default",
         "test": "node --test --test-reporter spec",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "pnpm run build"
     },
+    "volta": {
+        "node": "24.6.0",
+        "pnpm": "10.15.0"
+    },
+    "packageManager": "pnpm@10.15.0",
     "devDependencies": {
         "media-query-fns": "^2.1.2",
         "tsdown": "^0.14.2",
