@@ -23,10 +23,10 @@ jobs:
                   cache: "pnpm"
 
             - name: Install packages
-              run: npm install
+              run: pnpm install
 
             - name: Build package
-              run: npm run build
+              run: pnpm run build
 
             - name: Run tests
-              run: npm run test
+              run: pnpm run test
