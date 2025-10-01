@@ -1,5 +1,6 @@
 import { compileQuery, matches, type Environment, type EvaluateResult, type SimplePerm } from "media-query-fns";
 
+// TODO: remove `deviceWidth` & `deviceHeight` from it, and only derive those from `width`, `height`, and `dppx`
 type MediaState = { [key in keyof Environment as key extends `${infer Key}Px` ? Key : key]?: Environment[key] };
 
 const DEFAULT_ENV: Parameters<typeof matches>[1] = {
