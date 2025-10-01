@@ -3,24 +3,12 @@
 const { test } = require("node:test");
 const { strict: assert } = require("node:assert");
 const { matchMedia, setMedia, cleanupListeners, MediaQueryListEvent, cleanup } = require("mock-match-media");
+const { mock } = require("./utils.cjs");
 
 test.afterEach(() => {
     // cleanup listeners and state after each test
     cleanup();
 });
-
-/**
- * @type {() => [(event: MediaQueryListEvent) => void, MediaQueryListEvent[]]}
- */
-const mock = () => {
-    const calls = [];
-    return [
-        (event) => {
-            calls.push(event);
-        },
-        calls,
-    ];
-};
 
 test("`.addListener()`", () => {
     const mql = matchMedia("(min-width: 500px)");

@@ -29,6 +29,12 @@ const convertStateToEnv = (state: MediaState): Parameters<typeof matches>[1] => 
     return env;
 };
 
+function toCamelCase(str: string) {
+    return str.replace(/^-*/, "").replace(/-([a-z])/g, (match: string) => {
+        return match.charAt(1).toUpperCase() ?? "";
+    }) as Feature;
+}
+
 let state: MediaState = {};
 
 type Feature = keyof MediaState;
@@ -221,7 +227,7 @@ export const setMedia = (media: MediaState): void => {
     for (const [MQL, cache] of MQLs) {
         let found = false;
         for (const feature of cache.features) {
-            if (changedFeatures.has(feature)) {
+            if (changedFeatures.has(feature) || changedFeatures.has(toCamelCase(feature))) {
                 found = true;
                 break;
             }
