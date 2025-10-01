@@ -2,10 +2,11 @@
 
 const { test } = require("node:test");
 const { strict: assert } = require("node:assert");
-const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
+const { matchMedia, setMedia, cleanup } = require("mock-match-media");
+const { mock } = require("../utils.cjs");
 
 test.beforeEach(() => {
-    cleanupMedia();
+    cleanup();
 });
 
 test("unset", () => {
@@ -207,4 +208,43 @@ test("other syntax", () => {
     assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
     assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
     assert.equal(matchMedia("(device-aspect-ratio: 16 / 16)").matches, true);
+});
+
+test("`.addEventListener()`", () => {
+    const mqlAR3 = matchMedia("(device-aspect-ratio > 3)");
+    const [cb, calls] = mock();
+
+    mqlAR3.addEventListener("change", cb);
+
+    assert.equal(matchMedia("(device-aspect-ratio > 3)").matches, false);
+
+    setMedia({
+        width: 7,
+    });
+
+    assert.equal(matchMedia("(device-aspect-ratio > 3)").matches, false);
+    assert.equal(calls.length, 0);
+
+    setMedia({
+        height: 2,
+    });
+
+    assert.equal(matchMedia("(device-aspect-ratio > 3)").matches, true);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].matches, true);
+
+    setMedia({
+        height: 3,
+    });
+
+    assert.equal(matchMedia("(device-aspect-ratio > 3)").matches, false);
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].matches, false);
+
+    setMedia({
+        dppx: 2,
+    });
+
+    assert.equal(matchMedia("(device-aspect-ratio > 3)").matches, false);
+    assert.equal(calls.length, 2);
 });

@@ -2,10 +2,11 @@
 
 const { test } = require("node:test");
 const { strict: assert } = require("node:assert");
-const { matchMedia, setMedia, cleanupMedia } = require("mock-match-media");
+const { matchMedia, setMedia, cleanup } = require("mock-match-media");
+const { mock } = require("../utils.cjs");
 
 test.beforeEach(() => {
-    cleanupMedia();
+    cleanup();
 });
 
 test("unset", () => {
@@ -237,4 +238,36 @@ test("other syntax", () => {
         height: 2,
     });
     assert.equal(matchMedia("(aspect-ratio: 3)").matches, true);
+});
+
+test("`.addEventListener()`", () => {
+    const mqlAR3 = matchMedia("(aspect-ratio > 3)");
+    const [cb, calls] = mock();
+
+    mqlAR3.addEventListener("change", cb);
+
+    assert.equal(matchMedia("(aspect-ratio > 3)").matches, false);
+
+    setMedia({
+        width: 7,
+    });
+
+    assert.equal(matchMedia("(aspect-ratio > 3)").matches, false);
+    assert.equal(calls.length, 0);
+
+    setMedia({
+        height: 2,
+    });
+
+    assert.equal(matchMedia("(aspect-ratio > 3)").matches, true);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].matches, true);
+
+    setMedia({
+        height: 3,
+    });
+
+    assert.equal(matchMedia("(aspect-ratio > 3)").matches, false);
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].matches, false);
 });

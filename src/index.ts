@@ -1,5 +1,6 @@
 import { compileQuery, matches, type Environment, type EvaluateResult, type SimplePerm } from "media-query-fns";
 
+// TODO: remove `deviceWidth` & `deviceHeight` from it, and only derive those from `width`, `height`, and `dppx`
 type MediaState = { [key in keyof Environment as key extends `${infer Key}Px` ? Key : key]?: Environment[key] };
 
 const DEFAULT_ENV: Parameters<typeof matches>[1] = {
@@ -34,6 +35,58 @@ let state: MediaState = {};
 type Feature = keyof MediaState;
 
 const now = Date.now();
+
+/**
+ * Match the renaming done by media-query-fns
+ *
+ * {@link https://github.com/tbjgolden/media-query-fns/blob/7dae2618b9321f503cbd0a44a202a9190665e80e/lib/matches.ts#L200-L533}
+ */
+const MEDIA_FEATURE_TO_FEATURES = {
+    // Same but different casing
+    "any-hover": ["anyHover"],
+    "any-pointer": ["anyPointer"],
+    "color-gamut": ["colorGamut"],
+    "color-index": ["colorIndex"],
+    "display-mode": ["displayMode"],
+    "dynamic-range": ["dynamicRange"],
+    "environment-blending": ["environmentBlending"],
+    "forced-colors": ["forcedColors"],
+    grid: ["grid"],
+    "horizontal-viewport-segments": ["horizontalViewportSegments"],
+    hover: ["hover"],
+    "inverted-colors": ["invertedColors"],
+    "media-type": ["mediaType"],
+    "nav-controls": ["navControls"],
+    "overflow-block": ["overflowBlock"],
+    "overflow-inline": ["overflowInline"],
+    pointer: ["pointer"],
+    "prefers-color-scheme": ["prefersColorScheme"],
+    "prefers-contrast": ["prefersContrast"],
+    "prefers-reduced-data": ["prefersReducedData"],
+    "prefers-reduced-motion": ["prefersReducedMotion"],
+    "prefers-reduced-transparency": ["prefersReducedTransparency"],
+    scan: ["scan"],
+    scripting: ["scripting"],
+    update: ["update"],
+    "vertical-viewport-segments": ["verticalViewportSegments"],
+    "video-color-gamut": ["videoColorGamut"],
+    "video-dynamic-range": ["videoDynamicRange"],
+
+    // Numbers
+    monochrome: ["monochromeBits"],
+    color: ["colorBits"],
+    resolution: ["dppx"],
+
+    // Pixels
+    width: ["width"],
+    height: ["height"],
+    "device-height": ["deviceHeight"],
+    "device-width": ["deviceWidth"],
+
+    // Combinations
+    "aspect-ratio": ["width", "height"],
+    "device-aspect-ratio": ["deviceHeight", "deviceWidth"],
+} as const satisfies Record<string, Feature[]>;
 
 // Event was added in node 15, so until we drop the support for versions before it, we need to use this
 class EventLegacy {
@@ -73,7 +126,17 @@ const EventCompat: typeof Event = typeof Event === "undefined" ? EventLegacy : E
 const getFeaturesFromQuery = (query: EvaluateResult): Set<Feature> => {
     const features = new Set<Feature>();
     query.simplePerms.forEach((perm) => {
-        Object.keys(perm).forEach((feature) => features.add(feature as Feature));
+        Object.keys(perm).forEach((mediaFeature) => {
+            if (mediaFeature in MEDIA_FEATURE_TO_FEATURES) {
+                MEDIA_FEATURE_TO_FEATURES[mediaFeature as keyof typeof MEDIA_FEATURE_TO_FEATURES].forEach((feature) =>
+                    features.add(feature),
+                );
+            }
+            // // For debut, we can comment out those:
+            // else {
+            //     console.error("Unrecognized " + mediaFeature);
+            // }
+        });
     });
     return features;
 };
