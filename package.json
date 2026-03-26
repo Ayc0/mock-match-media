@@ -49,7 +49,7 @@
     "packageManager": "pnpm@10.15.0",
     "devDependencies": {
         "media-query-fns": "^2.1.2",
-        "tsdown": "^0.14.2",
+        "tsdown": "^0.21.5",
         "typescript": "^5.9.2"
     }
 }
