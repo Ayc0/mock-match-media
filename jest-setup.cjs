@@ -4,7 +4,7 @@ if (typeof globalThis.TextEncoder === "undefined") {
     Object.assign(globalThis, { TextEncoder });
 }
 
-const { cleanup } = require("./dist/index.js");
+const { cleanup } = require("./dist/index.cjs");
 
 require("./polyfill.cjs");
 
