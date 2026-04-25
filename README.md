@@ -37,10 +37,10 @@ const { matchMedia, setMedia } = require("mock-match-media");
 
 // Define current media
 setMedia({
-    width: 50,
-    type: "screen",
-    orientation: "landscape",
-    prefersColorScheme: "light",
+	width: 50,
+	type: "screen",
+	orientation: "landscape",
+	prefersColorScheme: "light",
 });
 
 matchMedia("(min-width: 250px)").matches;
@@ -50,7 +50,7 @@ matchMedia("(width > 40px)").matches;
 
 // Only redefine what changed
 setMedia({
-    width: 500,
+	width: 500,
 });
 
 matchMedia("(width > 250px)").matches;
@@ -65,7 +65,7 @@ matchMedia("(width > 250px)").matches;
 const { matchMedia, setMedia } = require("mock-match-media");
 
 setMedia({
-    width: 50,
+	width: 50,
 });
 
 const listener = (event) => console.log(event.matches);
@@ -77,19 +77,19 @@ matcher.addEventListener("change", listener);
 // matchMedia("(min-width: 250px)").addListener(event => console.log(event.matches));
 
 setMedia({
-    width: 100,
+	width: 100,
 });
 // outputs nothing because `matches` hasn't changed
 
 setMedia({
-    width: 1000,
+	width: 1000,
 });
 // outputs `true`
 
 matcher.removeEventListener("change", listener);
 
 setMedia({
-    width: 100,
+	width: 100,
 });
 // outputs nothing because the listener is removed
 ```
@@ -182,8 +182,8 @@ And all of those are tested.
 
 We also ship 2 versions of this library:
 
--   one in CJS
--   one in ESM
+- one in CJS
+- one in ESM
 
 This is also true for the polyfills, but the [`setup-jest`](#jest) file is only available in CJS (Jest doesn't work that well with ESM).
 
@@ -193,8 +193,8 @@ This is also true for the polyfills, but the [`setup-jest`](#jest) file is only 
 
 In `jest.setup.js`, you only need to import `mock-match-media/jest-setup` (or `mock-match-media/jest-setup.cjs` depending on your config). It'll:
 
--   install the polyfill (for `matchMedia` and `MediaQueryListEvent`)
--   add a call to `cleanup` in `afterAll` to auto-cleanup your env in after each `test`/`it`.
+- install the polyfill (for `matchMedia` and `MediaQueryListEvent`)
+- add a call to `cleanup` in `afterAll` to auto-cleanup your env in after each `test`/`it`.
 
 You can set import `jest-setup` in `setupFiles` or in `setupFilesAfterEnv` in your jest config.
 

@@ -4,11 +4,11 @@ import { compileQuery, matches, type Environment, type EvaluateResult, type Simp
 type MediaState = { [key in keyof Environment as key extends `${infer Key}Px` ? Key : key]?: Environment[key] };
 
 const DEFAULT_ENV: Parameters<typeof matches>[1] = {
-    widthPx: 0,
-    deviceWidthPx: 0,
-    heightPx: 0,
-    deviceHeightPx: 0,
-    dppx: 1,
+	widthPx: 0,
+	deviceWidthPx: 0,
+	heightPx: 0,
+	deviceHeightPx: 0,
+	dppx: 1,
 };
 
 type PixelFeature = "width" | "height" | "deviceWidth" | "deviceHeight";
@@ -17,17 +17,17 @@ const PIXEL_FEATURES = ["width", "height", "deviceWidth", "deviceHeight"];
 const isPixelFeature = (key: string): key is PixelFeature => PIXEL_FEATURES.includes(key);
 
 const convertStateToEnv = (state: MediaState): Parameters<typeof matches>[1] => {
-    const env = { ...DEFAULT_ENV };
+	const env = { ...DEFAULT_ENV };
 
-    for (const [key, value] of Object.entries(state)) {
-        if (isPixelFeature(key)) {
-            env[`${key}Px`] = value as number;
-        } else {
-            (env[key as Exclude<Feature, PixelFeature>] as any) = value;
-        }
-    }
+	for (const [key, value] of Object.entries(state)) {
+		if (isPixelFeature(key)) {
+			env[`${key}Px`] = value as number;
+		} else {
+			(env[key as Exclude<Feature, PixelFeature>] as any) = value;
+		}
+	}
 
-    return env;
+	return env;
 };
 
 let state: MediaState = {};
@@ -42,103 +42,103 @@ const now = Date.now();
  * {@link https://github.com/tbjgolden/media-query-fns/blob/7dae2618b9321f503cbd0a44a202a9190665e80e/lib/matches.ts#L200-L533}
  */
 const MEDIA_FEATURE_TO_FEATURES = {
-    // Same but different casing
-    "any-hover": ["anyHover"],
-    "any-pointer": ["anyPointer"],
-    "color-gamut": ["colorGamut"],
-    "color-index": ["colorIndex"],
-    "display-mode": ["displayMode"],
-    "dynamic-range": ["dynamicRange"],
-    "environment-blending": ["environmentBlending"],
-    "forced-colors": ["forcedColors"],
-    grid: ["grid"],
-    "horizontal-viewport-segments": ["horizontalViewportSegments"],
-    hover: ["hover"],
-    "inverted-colors": ["invertedColors"],
-    "media-type": ["mediaType"],
-    "nav-controls": ["navControls"],
-    "overflow-block": ["overflowBlock"],
-    "overflow-inline": ["overflowInline"],
-    pointer: ["pointer"],
-    "prefers-color-scheme": ["prefersColorScheme"],
-    "prefers-contrast": ["prefersContrast"],
-    "prefers-reduced-data": ["prefersReducedData"],
-    "prefers-reduced-motion": ["prefersReducedMotion"],
-    "prefers-reduced-transparency": ["prefersReducedTransparency"],
-    scan: ["scan"],
-    scripting: ["scripting"],
-    update: ["update"],
-    "vertical-viewport-segments": ["verticalViewportSegments"],
-    "video-color-gamut": ["videoColorGamut"],
-    "video-dynamic-range": ["videoDynamicRange"],
+	// Same but different casing
+	"any-hover": ["anyHover"],
+	"any-pointer": ["anyPointer"],
+	"color-gamut": ["colorGamut"],
+	"color-index": ["colorIndex"],
+	"display-mode": ["displayMode"],
+	"dynamic-range": ["dynamicRange"],
+	"environment-blending": ["environmentBlending"],
+	"forced-colors": ["forcedColors"],
+	grid: ["grid"],
+	"horizontal-viewport-segments": ["horizontalViewportSegments"],
+	hover: ["hover"],
+	"inverted-colors": ["invertedColors"],
+	"media-type": ["mediaType"],
+	"nav-controls": ["navControls"],
+	"overflow-block": ["overflowBlock"],
+	"overflow-inline": ["overflowInline"],
+	pointer: ["pointer"],
+	"prefers-color-scheme": ["prefersColorScheme"],
+	"prefers-contrast": ["prefersContrast"],
+	"prefers-reduced-data": ["prefersReducedData"],
+	"prefers-reduced-motion": ["prefersReducedMotion"],
+	"prefers-reduced-transparency": ["prefersReducedTransparency"],
+	scan: ["scan"],
+	scripting: ["scripting"],
+	update: ["update"],
+	"vertical-viewport-segments": ["verticalViewportSegments"],
+	"video-color-gamut": ["videoColorGamut"],
+	"video-dynamic-range": ["videoDynamicRange"],
 
-    // Numbers
-    monochrome: ["monochromeBits"],
-    color: ["colorBits"],
-    resolution: ["dppx"],
+	// Numbers
+	monochrome: ["monochromeBits"],
+	color: ["colorBits"],
+	resolution: ["dppx"],
 
-    // Pixels
-    width: ["width"],
-    height: ["height"],
-    "device-height": ["deviceHeight"],
-    "device-width": ["deviceWidth"],
+	// Pixels
+	width: ["width"],
+	height: ["height"],
+	"device-height": ["deviceHeight"],
+	"device-width": ["deviceWidth"],
 
-    // Combinations
-    "aspect-ratio": ["width", "height"],
-    "device-aspect-ratio": ["deviceHeight", "deviceWidth"],
+	// Combinations
+	"aspect-ratio": ["width", "height"],
+	"device-aspect-ratio": ["deviceHeight", "deviceWidth"],
 } as const satisfies Record<string, Feature[]>;
 
 // Event was added in node 15, so until we drop the support for versions before it, we need to use this
 class EventLegacy {
-    type: "change";
-    timeStamp: number;
+	type: "change";
+	timeStamp: number;
 
-    bubbles = false;
-    cancelBubble = false;
-    cancelable = false;
-    composed = false;
-    target = null;
-    currentTarget = null;
-    defaultPrevented = false;
-    eventPhase = 0;
-    isTrusted = false;
-    initEvent = () => {};
-    composedPath = () => [];
-    preventDefault = () => {};
-    stopImmediatePropagation = () => {};
-    stopPropagation = () => {};
-    returnValue = true;
-    srcElement = null;
-    // See https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
-    NONE = 0;
-    CAPTURING_PHASE = 1;
-    AT_TARGET = 2;
-    BUBBLING_PHASE = 3;
-    constructor(type: "change") {
-        this.type = type;
-        this.timeStamp = Date.now() - now; // See https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#value
-    }
+	bubbles = false;
+	cancelBubble = false;
+	cancelable = false;
+	composed = false;
+	target = null;
+	currentTarget = null;
+	defaultPrevented = false;
+	eventPhase = 0;
+	isTrusted = false;
+	initEvent = () => {};
+	composedPath = () => [];
+	preventDefault = () => {};
+	stopImmediatePropagation = () => {};
+	stopPropagation = () => {};
+	returnValue = true;
+	srcElement = null;
+	// See https://developer.mozilla.org/en-US/docs/Web/API/Event/eventPhase
+	NONE = 0;
+	CAPTURING_PHASE = 1;
+	AT_TARGET = 2;
+	BUBBLING_PHASE = 3;
+	constructor(type: "change") {
+		this.type = type;
+		this.timeStamp = Date.now() - now; // See https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp#value
+	}
 }
 
 // @ts-expect-error
 const EventCompat: typeof Event = typeof Event === "undefined" ? EventLegacy : Event;
 
 const getFeaturesFromQuery = (query: EvaluateResult): Set<Feature> => {
-    const features = new Set<Feature>();
-    query.simplePerms.forEach((perm) => {
-        Object.keys(perm).forEach((mediaFeature) => {
-            if (mediaFeature in MEDIA_FEATURE_TO_FEATURES) {
-                MEDIA_FEATURE_TO_FEATURES[mediaFeature as keyof typeof MEDIA_FEATURE_TO_FEATURES].forEach((feature) =>
-                    features.add(feature),
-                );
-            }
-            // // For debut, we can comment out those:
-            // else {
-            //     console.error("Unrecognized " + mediaFeature);
-            // }
-        });
-    });
-    return features;
+	const features = new Set<Feature>();
+	query.simplePerms.forEach((perm) => {
+		Object.keys(perm).forEach((mediaFeature) => {
+			if (mediaFeature in MEDIA_FEATURE_TO_FEATURES) {
+				MEDIA_FEATURE_TO_FEATURES[mediaFeature as keyof typeof MEDIA_FEATURE_TO_FEATURES].forEach((feature) =>
+					features.add(feature),
+				);
+			}
+			// // For debut, we can comment out those:
+			// else {
+			//     console.error("Unrecognized " + mediaFeature);
+			// }
+		});
+	});
+	return features;
 };
 
 type Callback = (event: MediaQueryListEvent) => void;
@@ -147,172 +147,172 @@ type MQL = ReturnType<typeof matchMedia>;
 const MQLs = new Map<MQL, { clear: () => void; previousMatched: boolean; features: Set<Feature> }>();
 
 export const matchMedia: typeof window.matchMedia = (query: string) => {
-    let compiledQuery = compileQuery(query);
-    let previousMatched;
-    try {
-        previousMatched = matches(compiledQuery, convertStateToEnv(state));
-    } catch (e) {
-        compiledQuery = compileQuery("not all");
-        previousMatched = false;
-    }
-    const callbacks = new Set<Callback>();
-    const onces = new WeakSet<Callback>();
+	let compiledQuery = compileQuery(query);
+	let previousMatched;
+	try {
+		previousMatched = matches(compiledQuery, convertStateToEnv(state));
+	} catch (e) {
+		compiledQuery = compileQuery("not all");
+		previousMatched = false;
+	}
+	const callbacks = new Set<Callback>();
+	const onces = new WeakSet<Callback>();
 
-    const clear = () => {
-        for (const callback of callbacks) {
-            onces.delete(callback);
-        }
-        callbacks.clear();
-    };
+	const clear = () => {
+		for (const callback of callbacks) {
+			onces.delete(callback);
+		}
+		callbacks.clear();
+	};
 
-    const removeListener = (callback: Callback) => {
-        callbacks.delete(callback);
-        onces.delete(callback);
-    };
+	const removeListener = (callback: Callback) => {
+		callbacks.delete(callback);
+		onces.delete(callback);
+	};
 
-    const mql: MQL = {
-        get matches() {
-            return matches(compiledQuery, convertStateToEnv(state));
-        },
-        media: query,
-        onchange: null,
-        addEventListener: (event: string, callback: EventListener, options?: boolean | AddEventListenerOptions) => {
-            if (event === "change" && callback) {
-                const isAlreadyListed = callbacks.has(callback);
-                callbacks.add(callback);
+	const mql: MQL = {
+		get matches() {
+			return matches(compiledQuery, convertStateToEnv(state));
+		},
+		media: query,
+		onchange: null,
+		addEventListener: (event: string, callback: EventListener, options?: boolean | AddEventListenerOptions) => {
+			if (event === "change" && callback) {
+				const isAlreadyListed = callbacks.has(callback);
+				callbacks.add(callback);
 
-                const hasOnce = typeof options === "object" && options?.once;
+				const hasOnce = typeof options === "object" && options?.once;
 
-                // If it doesn’t have `once: true`, but it was previously added with one, the `once` status should be lifted
-                if (!hasOnce) {
-                    onces.delete(callback);
-                    return;
-                }
+				// If it doesn’t have `once: true`, but it was previously added with one, the `once` status should be lifted
+				if (!hasOnce) {
+					onces.delete(callback);
+					return;
+				}
 
-                // If the callback is already listed in the list of callback to call, but not as a `once`,
-                // it means that it was added without the flag and thus shouldn’t be treated as such.
-                if (isAlreadyListed && !onces.has(callback)) {
-                    return;
-                }
+				// If the callback is already listed in the list of callback to call, but not as a `once`,
+				// it means that it was added without the flag and thus shouldn’t be treated as such.
+				if (isAlreadyListed && !onces.has(callback)) {
+					return;
+				}
 
-                // Otherwise, use the `once` flag
-                onces.add(callback);
-            }
-        },
-        removeEventListener: (event: string, callback: EventListener) => {
-            if (event === "change") removeListener(callback);
-        },
-        dispatchEvent: (event: MediaQueryListEvent) => {
-            if (!event) {
-                throw new TypeError(
-                    `Failed to execute 'dispatchEvent' on 'EventTarget': 1 argument required, but only 0 present.`,
-                );
-            }
-            if (!(event instanceof EventCompat)) {
-                throw new TypeError(
-                    `Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'.`,
-                );
-            }
-            if (event.type !== "change") {
-                return true;
-            }
-            mql.onchange?.(event);
-            callbacks.forEach((callback) => {
-                callback(event);
-                if (onces.has(callback)) {
-                    removeListener(callback);
-                }
-            });
-            // TODO: target and currentTarget
-            // Object.defineProperty(event, "target", { value: mql });
-            return true;
-        },
-        addListener: (callback) => {
-            if (!callback) return;
-            callbacks.add(callback);
-        },
-        removeListener: (callback) => {
-            if (!callback) return;
-            removeListener(callback);
-        },
-    };
+				// Otherwise, use the `once` flag
+				onces.add(callback);
+			}
+		},
+		removeEventListener: (event: string, callback: EventListener) => {
+			if (event === "change") removeListener(callback);
+		},
+		dispatchEvent: (event: MediaQueryListEvent) => {
+			if (!event) {
+				throw new TypeError(
+					`Failed to execute 'dispatchEvent' on 'EventTarget': 1 argument required, but only 0 present.`,
+				);
+			}
+			if (!(event instanceof EventCompat)) {
+				throw new TypeError(
+					`Failed to execute 'dispatchEvent' on 'EventTarget': parameter 1 is not of type 'Event'.`,
+				);
+			}
+			if (event.type !== "change") {
+				return true;
+			}
+			mql.onchange?.(event);
+			callbacks.forEach((callback) => {
+				callback(event);
+				if (onces.has(callback)) {
+					removeListener(callback);
+				}
+			});
+			// TODO: target and currentTarget
+			// Object.defineProperty(event, "target", { value: mql });
+			return true;
+		},
+		addListener: (callback) => {
+			if (!callback) return;
+			callbacks.add(callback);
+		},
+		removeListener: (callback) => {
+			if (!callback) return;
+			removeListener(callback);
+		},
+	};
 
-    MQLs.set(mql, {
-        previousMatched,
-        clear,
-        features: getFeaturesFromQuery(compiledQuery),
-    });
+	MQLs.set(mql, {
+		previousMatched,
+		clear,
+		features: getFeaturesFromQuery(compiledQuery),
+	});
 
-    return mql;
+	return mql;
 };
 
 export class MediaQueryListEvent extends EventCompat {
-    readonly media: string;
-    readonly matches: boolean;
-    constructor(
-        type: "change",
-        options: {
-            media?: string;
-            matches?: boolean;
-        } = {},
-    ) {
-        super(type);
-        this.media = options.media || "";
-        this.matches = options.matches || false;
-    }
+	readonly media: string;
+	readonly matches: boolean;
+	constructor(
+		type: "change",
+		options: {
+			media?: string;
+			matches?: boolean;
+		} = {},
+	) {
+		super(type);
+		this.media = options.media || "";
+		this.matches = options.matches || false;
+	}
 }
 
 // Cannot use MediaState here as setMedia is exposed in the API
 export const setMedia = (media: MediaState): void => {
-    const changedFeatures = new Set<Feature>();
-    Object.keys(media).forEach((feature) => {
-        changedFeatures.add(feature as Feature);
-        (state[feature as Feature] as any) = media[feature as Feature];
-    });
+	const changedFeatures = new Set<Feature>();
+	Object.keys(media).forEach((feature) => {
+		changedFeatures.add(feature as Feature);
+		(state[feature as Feature] as any) = media[feature as Feature];
+	});
 
-    // If we are trying to change the `width` but not the `deviceWidth`
-    if ((changedFeatures.has("width") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceWidth")) {
-        state.deviceWidth = (state.width ?? DEFAULT_ENV.widthPx) * (state.dppx ?? DEFAULT_ENV.dppx);
-        changedFeatures.add("deviceWidth");
-    }
-    // If we are trying to change the `height` but not the `deviceHeight`
-    if ((changedFeatures.has("height") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceHeight")) {
-        state.deviceHeight = (state.height ?? DEFAULT_ENV.heightPx) * (state.dppx ?? DEFAULT_ENV.dppx);
-        changedFeatures.add("deviceHeight");
-    }
+	// If we are trying to change the `width` but not the `deviceWidth`
+	if ((changedFeatures.has("width") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceWidth")) {
+		state.deviceWidth = (state.width ?? DEFAULT_ENV.widthPx) * (state.dppx ?? DEFAULT_ENV.dppx);
+		changedFeatures.add("deviceWidth");
+	}
+	// If we are trying to change the `height` but not the `deviceHeight`
+	if ((changedFeatures.has("height") || changedFeatures.has("dppx")) && !changedFeatures.has("deviceHeight")) {
+		state.deviceHeight = (state.height ?? DEFAULT_ENV.heightPx) * (state.dppx ?? DEFAULT_ENV.dppx);
+		changedFeatures.add("deviceHeight");
+	}
 
-    for (const [MQL, cache] of MQLs) {
-        let found = false;
-        for (const feature of cache.features) {
-            if (changedFeatures.has(feature)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            continue;
-        }
-        const doesMatch = matches(compileQuery(MQL.media), convertStateToEnv(state));
-        if (doesMatch === cache.previousMatched) {
-            continue;
-        }
-        cache.previousMatched = doesMatch;
-        MQL.dispatchEvent(new MediaQueryListEvent("change", { matches: doesMatch, media: MQL.media }));
-    }
+	for (const [MQL, cache] of MQLs) {
+		let found = false;
+		for (const feature of cache.features) {
+			if (changedFeatures.has(feature)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			continue;
+		}
+		const doesMatch = matches(compileQuery(MQL.media), convertStateToEnv(state));
+		if (doesMatch === cache.previousMatched) {
+			continue;
+		}
+		cache.previousMatched = doesMatch;
+		MQL.dispatchEvent(new MediaQueryListEvent("change", { matches: doesMatch, media: MQL.media }));
+	}
 };
 
 export const cleanupListeners = () => {
-    for (const { clear } of MQLs.values()) {
-        clear();
-    }
-    MQLs.clear();
+	for (const { clear } of MQLs.values()) {
+		clear();
+	}
+	MQLs.clear();
 };
 
 export const cleanupMedia = () => {
-    state = {};
+	state = {};
 };
 
 export const cleanup = () => {
-    cleanupListeners();
-    cleanupMedia();
+	cleanupListeners();
+	cleanupMedia();
 };
