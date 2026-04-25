@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-        "lib": ["ES2022", "DOM"],
-        "target": "es2022",
+	"compilerOptions": {
+		"lib": ["ES2022", "DOM"],
+		"target": "es2022",
 
-        "isolatedModules": true,
-        "verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
 
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
 
-        "module": "preserve",
-        "declaration": true
-    }
+		"module": "preserve",
+		"declaration": true
+	}
 }
