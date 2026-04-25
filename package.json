@@ -44,9 +44,9 @@
     },
     "volta": {
         "node": "24.6.0",
-        "pnpm": "10.15.0"
+        "pnpm": "10.33.2"
     },
-    "packageManager": "pnpm@10.15.0",
+    "packageManager": "pnpm@10.33.2",
     "devDependencies": {
         "media-query-fns": "^2.1.2",
         "tsdown": "^0.14.2",
